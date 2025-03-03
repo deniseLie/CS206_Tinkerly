@@ -1,13 +1,13 @@
 //server.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const { sequelize } = require('./models');
+const { sequelize } = require('../models');
 
 // Import routes
-const customerRoutes = require('./routes/customerRoutes');
-const serviceProviderRoutes = require('./routes/serviceProviderRoutes');
-const serviceRoutes = require('./routes/serviceRoutes');
-const serviceReviewRoutes = require('./routes/serviceReviewRoutes');
+const customerRoutes = require('../routes/customerRoutes');
+const serviceProviderRoutes = require('../routes/serviceProviderRoutes');
+const serviceRoutes = require('../routes/serviceRoutes');
+const serviceReviewRoutes = require('../routes/serviceReviewRoutes');
 
 const app = express();
 

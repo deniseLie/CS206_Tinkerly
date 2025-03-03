@@ -1,11 +1,17 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
 // Initialize Sequelize connection (update with your DB details)
-const sequelize = new Sequelize('TinkerlyDB', 'Admin', '12345678', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: 3306,
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'TinkerlyDB',
+  process.env.DB_USER || 'Admin',
+  process.env.DB_PASS || '12345678',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    dialect: 'mysql',
+    port: process.env.DB_PORT || 3306,
+    dialectModule: require('mysql2'),
+  }
+);
 
 // =======================
 // Customer Model (formerly User)
