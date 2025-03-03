@@ -33,79 +33,71 @@ const BookingScreen = () => {
 
   return (
     <View style={styles.container} keyboardShouldPersistTaps="handled">
-    {/* <FlatList
-      data={[1]} 
-      renderItem={() => ( */}
-        {/* <View style={styles.container}> */}
-          <Calendar
-            current={"2025-03-01"}
-            minDate={"2025-03-01"}
-            maxDate={"2025-03-31"}
-            onDayPress={onDayPress} 
-            dayComponent={({ date, state }) => (
-              <TouchableOpacity 
-                style={[
-                  styles.dayContainer,
-                  date.dateString === selectedDate && styles.selectedDayContainer,
-                ]} 
-                onPress={() => onDayPress(date)} 
-                disabled={state === "disabled"}
-              >
-                <Text
-                  style={[
-                    styles.dayText,
-                    state === "disabled" && styles.disabledDayText,
-                    date.dateString === selectedDate && styles.selectedDayText,
-                  ]}
-                >
-                  {date.day}
-                </Text>
-                <Text style={[
-                  styles.calendarPriceText,
-                  state === "disabled" && styles.disabledDayText,
-                  date.dateString === selectedDate && styles.selectedDayText,
-                ]}>
-                  ${date.day % 7 === 3 ? 65 : 45}
-                </Text>
-              </TouchableOpacity >
-            )}
-            theme={{
-              selectedDayBackgroundColor: "#41A48F",
-              todayTextColor: "#41A48F",
-              arrowColor: "#41A48F",
-            }}
+      <Calendar
+        current={"2025-03-01"}
+        minDate={"2025-03-01"}
+        maxDate={"2025-03-31"}
+        onDayPress={onDayPress} 
+        dayComponent={({ date, state }) => (
+          <TouchableOpacity 
+            style={[
+              styles.dayContainer,
+              date.dateString === selectedDate && styles.selectedDayContainer,
+            ]} 
+            onPress={() => onDayPress(date)} 
+            disabled={state === "disabled"}
+          >
+            <Text
+              style={[
+                styles.dayText,
+                state === "disabled" && styles.disabledDayText,
+                date.dateString === selectedDate && styles.selectedDayText,
+              ]}
+            >
+              {date.day}
+            </Text>
+            <Text style={[
+              styles.calendarPriceText,
+              state === "disabled" && styles.disabledDayText,
+              date.dateString === selectedDate && styles.selectedDayText,
+            ]}>
+              ${date.day % 7 === 3 ? 65 : 45}
+            </Text>
+          </TouchableOpacity >
+        )}
+        theme={{
+          selectedDayBackgroundColor: "#41A48F",
+          todayTextColor: "#41A48F",
+          arrowColor: "#41A48F",
+        }}
+      />
+
+      {selectedDate && (
+        <View>
+          <Text style={styles.timeTitle}>Time</Text>
+          <DropDownPicker
+            open={open}
+            value={selectedTime}
+            items={items}
+            setOpen={setOpen}
+            setValue={setSelectedTime}
+            setItems={setItems}
+            placeholder="Select a time slot"
+            dropDownDirection="BOTTOM"
+            containerStyle={styles.dropdownContainer}
+            style={styles.dropdown}
+            labelStyle={styles.dropdownLabel}
+            placeholderStyle={styles.dropdownPlaceholder}
+            scrollViewProps={{ nestedScrollEnabled: true }}
           />
-
-          {selectedDate && (
-            <View>
-              <Text style={styles.timeTitle}>Time</Text>
-              <DropDownPicker
-                open={open}
-                value={selectedTime}
-                items={items}
-                setOpen={setOpen}
-                setValue={setSelectedTime}
-                setItems={setItems}
-                placeholder="Select a time slot"
-                dropDownDirection="BOTTOM"
-                containerStyle={styles.dropdownContainer}
-                style={styles.dropdown}
-                labelStyle={styles.dropdownLabel}
-                placeholderStyle={styles.dropdownPlaceholder}
-                scrollViewProps={{ nestedScrollEnabled: true }}
-              />
-            </View>
-          )}
-
-          {/* Find Service Providers Button */}
-          <TouchableOpacity style={styles.findButtonContainer} disabled={!(selectedDate && selectedTime)}>
-            <Text style={styles.findButtonText}>Find Service Providers</Text>
-          </TouchableOpacity>
         </View>
-    //     {/* </View> */}
-    //   // )}
-    // //   keyExtractor={(item) => item.toString()}
-    // // />
+      )}
+
+      {/* Find Service Providers Button */}
+      <TouchableOpacity style={styles.findButtonContainer} disabled={!(selectedDate && selectedTime)}>
+        <Text style={styles.findButtonText}>Find Service Providers</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
