@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LocationSearchBar, SearchBar } from '@/components/SearchBar';
 import { ScrollView } from 'react-native-gesture-handler';
-import ButtonFilter from '@/components/buttonFilter';
+import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
+import { Link } from 'expo-router';
 
 export default function Browse() {
 
@@ -12,7 +13,10 @@ export default function Browse() {
   const [activeFilter, setActiveFilter] = useState<string>("Recommended");
 
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
-  const services = ["test", "test"];
+  const services = [
+    { name: 'Bugis Air-Con', services : "AC Services", distance : "1 km", rating : 4.85, reviews : "11.9k", price: 55 },
+    { name: 'Kim Chuan Air-Con', services : "AC Services", distance : "1 km", rating : 4.85, reviews : "11.9k", price: 50 },
+  ];
 
   return (
     <View style={styles.container}>
@@ -49,9 +53,16 @@ export default function Browse() {
       {/* Services */}
       <View style={styles.servicesContainer}>
         {services?.map((service, index) => (
-          <ServiceProviderCard
+          <Link
             key={index}
-          />
+            href={{
+              pathname: `/serviceProviderPage`,
+              params: {service: service}
+            }}
+            style={{ textDecorationLine: 'none' }}
+          >
+            <ServiceProviderCard service={service}/>
+          </Link>
         ))}
       </View>
     </View>
@@ -85,6 +96,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   servicesContainer: {
-
+    gap: 20
   }
 })

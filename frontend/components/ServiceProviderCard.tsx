@@ -2,42 +2,36 @@ import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-export default function ServiceProviderCard({
-  name = "Service Name",
-  services = "AC Services",
-  distance = "1 km",
-  rating = 4.85,
-  reviews = "11.9k",
-  price = "55 SGD",
-  imageUri = "frontend\assets\images\ahbeng.png"
-}) {
+export default function ServiceProviderCard({ service }) {
   return (
     <View style={styles.cardContainer}>
-        <Image source={{ src: imageUri }} style={styles.profileImage} />
+        {/* <Image source={{ src: imageUri }} style={styles.profileImage} /> */}
 
-        {/* I */}
+        {/* Info */}
         <View style={styles.infoContainer}>
-            <Text style={styles.nameText}>{name}</Text>
-            <Text style={styles.servicesText}>{services}</Text>
+            <Text style={styles.nameText}>{service.name}</Text>
+            <Text style={styles.servicesText}>{service.services}</Text>
             <View style={styles.locationContainer}>
             <FontAwesome name="map-marker" size={14} color="gray" />
-            <Text style={styles.distanceText}>{distance}</Text>
+            <Text style={styles.distanceText}>{service.distance}</Text>
             </View>
         </View>
 
         {/* Ratings */}
         <View style={styles.ratingContainer}>
-            <Text style={styles.ratingText}>{rating.toFixed(2)}</Text>
+            <Text style={styles.ratingText}>{service.rating.toFixed(2)}</Text>
             <FontAwesome name="star" size={14} color="#F4A100" />
-            <Text style={styles.reviewsText}>({reviews})</Text>
+            <Text style={styles.reviewsText}>({service.reviews})</Text>
         </View>
 
+        {/* Price */}
         <Pressable style={styles.priceButton}>
-            <Text style={styles.priceText}>{price}</Text>
+            <Text style={styles.priceText}>{service.price} SGD</Text>
         </Pressable>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   cardContainer: {
