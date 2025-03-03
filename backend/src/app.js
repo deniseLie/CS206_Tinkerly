@@ -1,19 +1,31 @@
+// app.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const { sequelize } = require('./models');
 
-import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import userRoutes from './routes/userRoutes.js';
+// Import routes
+const customerRoutes = require('./routes/customerRoutes');
+const serviceProviderRoutes = require('./routes/serviceProviderRoutes');
+const serviceRoutes = require('./routes/serviceRoutes');
+const serviceReviewRoutes = require('./routes/serviceReviewRoutes');
 
 const app = express();
 
-app.use(cors());
+// Middleware
 app.use(bodyParser.json());
 
-// Routes
-app.use('/api/users', userRoutes);
+// Route mappings
+app.use('/customers', customerRoutes);
+app.use('/service-providers', serviceProviderRoutes);
+app.use('/services', serviceRoutes);
+app.use('/service-reviews', serviceReviewRoutes);
 
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
-
-export default app;
+// Test DB connection and start the server
+sequelize.authenticate()
+  .then(() => {
+    console.log('Database connected...');
+    app.listen(3000, () => {
+      console.log('Server running on http://localhost:3000');
+    });
+  })
+  .catch(err => console.error('Error connecting to the database:', err));
