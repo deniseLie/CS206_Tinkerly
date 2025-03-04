@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     Platform,
     Pressable,
     View,
-    ScrollView, // Import ScrollView
+    TextInput,
+    ScrollView,
 } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -213,12 +214,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 20,
         marginHorizontal: 20,
+        marginTop: 0,
         marginBottom: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: Platform.OS === 'android' ? 3 : undefined,
     },
     descriptionTitle: {
         fontSize: 16,
@@ -248,6 +245,16 @@ const styles = StyleSheet.create({
         padding: 20,
         marginHorizontal: 20,
         marginBottom: 20,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
+    extraInput: { // Style for the TextInput
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        minHeight: 80, // Adjust as needed
+        textAlignVertical: 'top',
     },
     // Style for Confirm Booking button
     confirmBookingButton: {
@@ -259,17 +266,57 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     confirmBookingText: {
-        color: '#fff',
+        color: '#FFF',
         fontSize: 16,
         fontWeight: '500',
     },
     walletBalance: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
+    centerButtonContainer: {
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    confirmButton: {
+        backgroundColor: '#41A48F',
+        marginHorizontal: 20,
+        marginBottom: 20,
+        padding: 16,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    editButtonContainer: { // New container for positioning
+        alignItems: 'flex-end', // Align to the right
+        marginTop: 10,
     },
     editButton: {
-        color: '#41A48F',
+        backgroundColor: '#41A48F',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+    },
+    editButtonText: {
+        color: '#FFF',
         fontWeight: 'bold',
+        fontSize: 14,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#E0E0E0',
+        marginVertical: 10,
+        width: '100%',
+    },
+    blackBorder: {
+        backgroundColor: '#000000',
+        height: 2,
+    },
+    costRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 5,
     },
 });
 
@@ -277,6 +324,7 @@ export default function ReviewOrder() {
     const description =
         "Customer's air-con is not cold. Requires cleaning and servicing. We performed suctioning and cleaning of the webbing to fix the issue.";
     const walletBalance = 100;
+    const [extraRequests, setExtraRequests] = useState('');
 
     return (
         <ThemedView style={styles.container}>
@@ -285,9 +333,7 @@ export default function ReviewOrder() {
                 <Pressable onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name="chevron-back" size={24} color="#41A48F" />
                 </Pressable>
-                <ThemedText style={[styles.headerTitle, { color: '#41A48F' }]}>
-                    Review Order
-                </ThemedText>
+                <ThemedText style={styles.headerTitle}>Order Receipt</ThemedText>
                 <View style={styles.placeholder} />
             </ThemedView>
 
@@ -296,7 +342,7 @@ export default function ReviewOrder() {
                 <ReceiptCard
                     companyName="Example Company"
                     services={[
-                      { serviceName: 'AC Repair', quantity: 1, price: 35.00 }
+                        { serviceName: 'AC Repair', quantity: 1, price: 35.00 }
                     ]}
                     travellingCost={5.00}
                     consultationFee={5.00}
@@ -306,11 +352,9 @@ export default function ReviewOrder() {
                 {/* Time Panel */}
                 <TimePanel />
 
-                {/* Service Description Card */}
+                {/* Description Card */}
                 <ThemedView style={styles.descriptionCard}>
-                    <ThemedText style={styles.descriptionTitle}>
-                        Service Description
-                    </ThemedText>
+                    <ThemedText style={styles.descriptionTitle}>Service Description</ThemedText>
                     <ThemedText style={styles.descriptionText}>{description}</ThemedText>
                 </ThemedView>
 
@@ -319,35 +363,47 @@ export default function ReviewOrder() {
                     <ThemedText style={styles.descriptionTitle}>
                         Extra Requests (Optional)
                     </ThemedText>
-                    <ThemedText style={styles.descriptionText}>
-                        {/* Add your input field here */}
-                    </ThemedText>
+                    <TextInput
+                        style={styles.extraInput}
+                        placeholder="Enter your extra requests here..."
+                        multiline={true}
+                        value={extraRequests}
+                        onChangeText={setExtraRequests}
+                    />
                 </ThemedView>
 
                 {/* Confirm Payment Method */}
                 <ThemedView style={styles.extraCard}>
-                    <ThemedText style={styles.descriptionTitle}>
-                        Confirm Payment Method
-                    </ThemedText>
-                    <ThemedText style={styles.descriptionText}>
-                        <ThemedView style={styles.walletBalance}>
-                            <ThemedText>Tinkerly Wallet {"\n"} Current Balance</ThemedText>
-                            <ThemedText>S${walletBalance.toFixed(2)}</ThemedText>
-                        </ThemedView>
-                        <Pressable>
-                            <ThemedText style={styles.editButton}>Edit</ThemedText>
+                    <View>
+                        <ThemedText style={styles.descriptionTitle}>
+                            Confirm Payment Method
+                        </ThemedText>
+                        <ThemedText style={styles.descriptionText}>
+                            <ThemedView style={styles.walletBalance}>
+                                <View>
+                                    <ThemedText>Tinkerly Wallet</ThemedText>
+                                    <ThemedText>Current Balance</ThemedText>
+                                    <ThemedText>S${walletBalance.toFixed(2)}</ThemedText>
+                                </View>
+                            </ThemedView>
+                        </ThemedText>
+                    </View>
+                    <View style={styles.editButtonContainer}>
+                        <Pressable
+                            style={styles.editButton}
+                            onPress={() => router.push('/payment')}
+                        >
+                            <ThemedText style={styles.editButtonText}>Edit</ThemedText>
                         </Pressable>
-                    </ThemedText>
+                    </View>
                 </ThemedView>
 
                 {/* Confirm Booking Button */}
                 <Pressable
                     style={styles.confirmBookingButton}
-                    onPress={() => router.push('/')}
+                    onPress={() => router.push('/orderreceipt')}
                 >
-                    <ThemedText style={styles.confirmBookingText}>
-                        Confirm Booking
-                    </ThemedText>
+                    <ThemedText style={styles.confirmBookingText}>Confirm Booking</ThemedText>
                 </Pressable>
             </ScrollView>
         </ThemedView>
