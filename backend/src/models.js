@@ -188,3 +188,12 @@ module.exports = {
   Service,
   ServiceReview,
 };
+
+// Sync models with the database
+sequelize.sync({ alter: true }) // Use { force: true } to drop & recreate tables
+  .then(() => {
+    console.log('✅ All models are synchronized with Supabase!');
+  })
+  .catch(err => {
+    console.error('❌ Error syncing models:', err);
+  });
