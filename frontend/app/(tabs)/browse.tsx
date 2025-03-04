@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LocationSearchBar, SearchBar } from '@/components/SearchBar';
@@ -6,10 +6,12 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Link } from 'expo-router';
+import { fetchServiceProviders } from '@/services/serviceProviderApi';
 
 export default function Browse() {
 
   // State
+  const [serviceProvider, setServiceProvider] = useState([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilter, setActiveFilter] = useState<string>("Recommended");
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
@@ -29,6 +31,22 @@ export default function Browse() {
       if (activeFilter === "Highest Rated") return b.rating - a.rating;
       return 0;
     });
+  
+  // use effect
+  useEffect(() => {
+    loadServiceProvider();
+  }, [])
+
+  // function 
+  const loadServiceProvider = async () => {
+    try {
+      const data = await fetchServiceProviders();
+      console.log('Fetch service provider', data);
+      setServiceProvider(data);
+    } catch (e) {
+      console.error('Error fetching service provider', e);
+    }
+  }
 
   return (
     <View style={styles.container}>

@@ -1,5 +1,5 @@
 import api from './api';
-import { Service } from '../types/service';
+import { Service } from '../types/interface';
 
 // Fetch all services
 export const fetchServices = async (): Promise<Service[]> => {
