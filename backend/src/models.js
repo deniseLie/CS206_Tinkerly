@@ -185,6 +185,8 @@ ServiceType.hasMany(Service, { foreignKey: 'typeID' });
 
 ServiceType.belongsTo(ServiceProvider, {foreignKey: 'spID'})
 ServiceProvider.hasMany(ServiceType, {foreignKey: 'spID'})
+// ServiceType.belongsTo(ServiceProvider, { foreignKey: 'spID', as: 'ServiceProvider' });
+// ServiceProvider.hasMany(ServiceType, { foreignKey: 'spID', as: 'ServiceTypes' });
 
 // A Service is requested by one Customer
 Service.belongsTo(Customer, { foreignKey: 'customerID' });
@@ -197,38 +199,38 @@ Service.hasOne(ServiceReview, { foreignKey: 'serviceID' });
 Customer.hasMany(Payment, { foreignKey: 'customerID' });
 Payment.belongsTo(Customer, { foreignKey: 'customerID' });
 
-Service.beforeCreate(async (service, options) => {
-  if (service.typeID) {
-    // Get the associated ServiceType along with its ServiceProvider
-    const serviceType = await sequelize.models.ServiceType.findByPk(service.typeID, {
-      include: [{
-        model: sequelize.models.ServiceProvider,
-        as: 'ServiceProvider' // Alias if defined in association, or leave out if not using alias.
-      }]
-    });
-    if (serviceType) {
-      const basePrice = serviceType.basePrice || 0;
-      const consultPrice = serviceType.consultPrice || 0;
-      let providerDistance = 0;
+// Service.beforeCreate(async (service, options) => {
+//   if (service.typeID) {
+//     // Get the associated ServiceType along with its ServiceProvider
+//     const serviceType = await sequelize.models.ServiceType.findByPk(service.typeID, {
+//       include: [{
+//         model: sequelize.models.ServiceProvider,
+//         as: 'ServiceProvider' // Alias if defined in association, or leave out if not using alias.
+//       }]
+//     });
+//     if (serviceType) {
+//       const basePrice = serviceType.basePrice || 0;
+//       const consultPrice = serviceType.consultPrice || 0;
+//       let providerDistance = 0;
       
-      // Try to get the distance from the included ServiceProvider
-      if (serviceType.ServiceProvider) {
-        providerDistance = serviceType.ServiceProvider.distance || 0;
-      } else if (serviceType.spID) {
-        // If the association wasn't included, fetch the provider manually.
-        const provider = await sequelize.models.ServiceProvider.findByPk(serviceType.spID);
-        providerDistance = provider ? provider.distance || 0 : 0;
-      }
+//       // Try to get the distance from the included ServiceProvider
+//       if (serviceType.ServiceProvider) {
+//         providerDistance = serviceType.ServiceProvider.distance || 0;
+//       } else if (serviceType.spID) {
+//         // If the association wasn't included, fetch the provider manually.
+//         const provider = await sequelize.models.ServiceProvider.findByPk(serviceType.spID);
+//         providerDistance = provider ? provider.distance || 0 : 0;
+//       }
       
-      let distanceCost = providerDistance * 2.5;
-      if (distanceCost > 30) distanceCost = 30;
+//       let distanceCost = providerDistance * 2.5;
+//       if (distanceCost > 30) distanceCost = 30;
 
-      // Compute finalPrice using the formula:
-      service.finalPrice = basePrice + consultPrice + distanceCost;
+//       // Compute finalPrice using the formula:
+//       service.finalPrice = basePrice + consultPrice + distanceCost;
       
-    }
-  }
-});
+//     }
+//   }
+// });
 
 // =======================
 // Export models and connection
