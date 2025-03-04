@@ -1,17 +1,51 @@
+// const { Sequelize, DataTypes } = require('sequelize');
+
+// // Initialize Sequelize connection (update with your DB details)
+// const sequelize = new Sequelize(
+//   process.env.DB_NAME || 'TinkerlyDB',
+//   process.env.DB_USER || 'Admin',
+//   process.env.DB_PASS || '12345678',
+//   {
+//     host: process.env.DB_HOST || 'localhost',
+//     dialect: 'mysql',
+//     port: process.env.DB_PORT || 3306,
+//     dialectModule: require('mysql2'),
+//   }
+// );
+
+// Load environment variables from .env file
+require('dotenv').config();
+
 const { Sequelize, DataTypes } = require('sequelize');
 
-// Initialize Sequelize connection (update with your DB details)
+// Initialize Sequelize with Supabase PostgreSQL credentials
 const sequelize = new Sequelize(
-  process.env.DB_NAME || 'TinkerlyDB',
-  process.env.DB_USER || 'Admin',
-  process.env.DB_PASS || '12345678',
+  process.env.DB_NAME, // e.g., 'postgres'
+  process.env.DB_USER, // your Supabase user
+  process.env.DB_PASS, // your Supabase password
   {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: 'mysql',
-    port: process.env.DB_PORT || 3306,
-    dialectModule: require('mysql2'),
+    host: process.env.DB_HOST, // your Supabase host, e.g., 'db.supabase.co'
+    dialect: 'postgres',       // Using PostgreSQL
+    port: process.env.DB_PORT, // typically 5432 for PostgreSQL
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false, // Use false if your SSL certificate isn’t verified by a CA
+      },
+    },
+    // Optionally, enable logging for debugging:
+    // logging: console.log,
   }
 );
+
+// Test the connection
+// sequelize.authenticate()
+//   .then(() => {
+//     console.log('Connection to Supabase PostgreSQL has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 // =======================
 // Customer Model (formerly User)
