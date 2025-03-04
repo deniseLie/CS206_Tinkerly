@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     },
     servicesList: {
         paddingBottom: 20,
-        width: screenWidth / 3, 
+        width: screenWidth / 2.5, 
         marginTop: 20,
         marginLeft: 20,
     },

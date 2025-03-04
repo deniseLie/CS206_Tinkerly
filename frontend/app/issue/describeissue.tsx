@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -6,11 +6,44 @@ import {
     TextInput,
     TouchableOpacity,
     Image,
+    Modal,
     Dimensions,
 } from 'react-native';
 import BackButton from '@/components/BackButton';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 
 const DescribeIssue = () => {
+    const router = useRouter();
+
+    const onPressService = (item) => {
+        console.log(item);
+        router.push({
+            pathname: "/serviceProvider/serviceProviderBrowse",
+            params: {
+                data: JSON.stringify({
+                service: JSON.stringify(item),
+                })
+            }
+            })
+    }
+
+    const [activeButton, setActiveButton] = useState('urgent'); // Default to "urgent"
+
+    // State to manage the image source
+    const [imageSource, setImageSource] = useState(require('../../assets/icons/camera.png')); // Default image
+
+    // Function to handle image change
+    const handleImageChange = () => {
+        // Update the image source (use another local or remote image)
+        setImageSource(require('../../assets/camerapics/airconleaking.jpg')); // Replace with your new image path
+    };
+
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
+    const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
+
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -23,9 +56,9 @@ const DescribeIssue = () => {
 
             {/* Upload Section */}
             <Text style={styles.sectionTitle}>Upload Photos and/or Videos</Text>
-            <TouchableOpacity style={styles.uploadBox}>
+            <TouchableOpacity style={styles.uploadBox} onPress={handleImageChange}>
                 <Image 
-                    source={require('../../assets/icons/camera.png')}
+                    source={imageSource} 
                     style={styles.uploadImage} 
                 />
             </TouchableOpacity>
@@ -44,26 +77,73 @@ const DescribeIssue = () => {
             {/* Service Date & Time */}
             <Text style={styles.sectionTitle}>Service date & Time</Text>
             <View style={styles.buttonGroup}>
-                <TouchableOpacity style={[styles.button, styles.activeButton]}>
-                    <Text style={[styles.buttonText, styles.activeButtonText]}>Urgent (today)</Text>
+                <TouchableOpacity
+                    style={[
+                        styles.buttonBox,
+                        activeButton === 'urgent' && styles.activeButtonBox,
+                    ]}
+                    onPress={() => setActiveButton('urgent')}
+                >
+                    <Text
+                        style={[
+                            styles.buttonText,
+                            activeButton === 'urgent' && styles.activeButtonText,
+                        ]}
+                    >
+                        Urgent (today)
+                    </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Schedule for later</Text>
+                <TouchableOpacity
+                    style={[
+                        styles.buttonBox,
+                        activeButton === 'schedule' && styles.activeButtonBox,
+                    ]}
+                    onPress={() => setActiveButton('schedule')}
+                >
+                    <Text
+                        style={[
+                            styles.buttonText,
+                            activeButton === 'schedule' && styles.activeButtonText,
+                        ]}
+                    >
+                        Schedule for later
+                    </Text>
                 </TouchableOpacity>
             </View>
 
+
             {/* Confirm Address */}
             <Text style={styles.sectionTitle}>Confirm Address</Text>
-            <TouchableOpacity style={styles.addressButton}>
+            <TouchableOpacity style={styles.addressButton} onPress={toggleModal}>
                 <Image
-                    source={require('../../assets/icons/maps.png')} // Replace with your location icon path
+                    source={require('../../assets/icons/maps.png')}
                     style={styles.addressIcon}
                 />
                 <Text style={styles.addressText}>Your House</Text>
             </TouchableOpacity>
 
+            {/* Modal for Address Confirmation */}
+            <Modal
+                visible={isModalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={toggleModal}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Image
+                            source={require('../../assets/icons/locationexample.png')}
+                            style={styles.modalImage}
+                        />
+                        <TouchableOpacity style={styles.confirmButton} onPress={toggleModal}>
+                            <Text style={styles.confirmButtonText}>Confirm</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
             {/* Continue Button */}
-            <TouchableOpacity style={styles.continueButton}>
+            <TouchableOpacity style={styles.continueButton} onPress={() => onPressService()}>
                 <Text style={styles.continueButtonText}>Continue</Text>
             </TouchableOpacity>
 
@@ -101,22 +181,50 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#ddd',
     },
     uploadImage: {
-        width: 80, // Adjust as needed
+        width: 80,
         height: 80,
         resizeMode: 'contain',
     },
     descriptionArea: {
-        height: 170, // Adjust height as needed
+        height: 170,
         borderWidth: 3,
         borderColor: '#ddd',
         borderRadius: 5,
         paddingHorizontal: 15,
         paddingVertical: 10,
-        textAlignVertical: 'top', // Aligns text to the top
+        textAlignVertical: 'top',
         fontSize: 14,
-        backgroundColor: '#fff', // Optional: Makes it visually distinct
+        backgroundColor: '#fff',
+    },
+    buttonGroup: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+    },
+    buttonBox: {
+        flex: 1, // Makes both buttons equal width
+        borderWidth: 1, // Adds a border around the button
+        borderColor: '#ddd', // Sets the border color to grey
+        borderRadius: 10, // Adds rounded corners to the box
+        paddingVertical: 15, // Adds vertical padding inside the box
+        marginHorizontal: 5, // Adds spacing between the buttons
+        backgroundColor: '#fff', // Default white background for inactive buttons
+    },
+    activeButtonBox: {
+        backgroundColor: '#41A48F', // Green background for the active button
+        borderColor: '#41A48F', // Matches the active background color
+    },
+    buttonText: {
+        textAlign: 'center', // Centers text horizontally
+        fontSize: 14,
+        color: '#aaa', // Default grey text for inactive buttons
+    },
+    activeButtonText: {
+        color: '#fff', // White text for the active button
     },
     addressButton: {
         flexDirection: 'row',
@@ -143,11 +251,40 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 15,
         alignItems: 'center',
-        alignSelf: 'center', // Centers the button horizontally
-        width: '60%', // Adjust width as needed (e.g., 50%, 200)
+        alignSelf:'center', 
+         width:'60%',
+     }, 
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-    continueButtonText: {
-        color: '#fff',
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        width: 300,
+        height: 300,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalImage: {
+        width: 250,
+        height: 200,
+        resizeMode: 'contain',
+        marginBottom: 20,
+    },    
+    confirmButton: {
+        backgroundColor: '#41A48F', // Green background color
+        borderRadius: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    confirmButtonText: {
+        color: '#fff', // White text
         fontSize: 16,
         fontWeight: 'bold',
     },

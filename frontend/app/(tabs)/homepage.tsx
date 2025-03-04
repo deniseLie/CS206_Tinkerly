@@ -14,6 +14,7 @@ import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 const HomeScreen = () => {
     
     const router = useRouter();
+
     const services = [
         { id: '1', name: 'Home Cleaning', icon: require('../../assets/icons/homecleaning.webp') },
         { id: '2', name: 'Deep Cleaning', icon: require('../../assets/icons/deepcleaning.png') },
