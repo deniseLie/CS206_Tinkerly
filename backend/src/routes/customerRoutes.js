@@ -18,6 +18,6 @@ router.put('/:id', customerController.updateCustomer);
 // Delete a customer by ID
 router.delete('/:id', customerController.deleteCustomer);
 
-router.get('/:id/payments', customerController.getCustomerPayments);
+// router.get('/:id/payments', customerController.getCustomerPayments);
 
 module.exports = router;

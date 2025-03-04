@@ -44,7 +44,7 @@ const Customer = sequelize.define('Customer', {
   },
 }, {
   tableName: 'customers',
-  timestamps: true,
+  timestamps: false,
 });
 
 // =======================
@@ -83,7 +83,7 @@ const ServiceProvider = sequelize.define('ServiceProvider', {
   },
 }, {
   tableName: 'service_providers',
-  timestamps: true,
+  timestamps: false,
 });
 
 // =======================
@@ -112,7 +112,7 @@ const Service = sequelize.define('Service', {
   },
 }, {
   tableName: 'services',
-  timestamps: true,
+  timestamps: false,
 });
 
 // =======================
@@ -133,7 +133,7 @@ const ServiceReview = sequelize.define('ServiceReview', {
   },
 }, {
   tableName: 'service_reviews',
-  timestamps: true,
+  timestamps: false,
 });
 
 const Payment = sequelize.define('Payment', {
@@ -153,7 +153,7 @@ const Payment = sequelize.define('Payment', {
   },
 }, {
   tableName: 'payment',
-  timestamps: true,
+  timestamps: false,
 });
 
 const ServiceType = sequelize.define('ServiceType', {
@@ -173,7 +173,7 @@ const ServiceType = sequelize.define('ServiceType', {
   },
 }, {
   tableName: 'service_types',
-  timestamps: true,
+  timestamps: false,
 });
 
 // =======================
@@ -246,8 +246,8 @@ module.exports = {
 // Sync models with the database
 sequelize.sync({ alter: true }) // Use { force: true } to drop & recreate tables
   .then(() => {
-    console.log('✅ All models are synchronized with Supabase!');
+    console.log('All models are synchronized with Supabase!');
   })
   .catch(err => {
-    console.error('❌ Error syncing models:', err);
+    console.error('Error syncing models:', err);
   });
