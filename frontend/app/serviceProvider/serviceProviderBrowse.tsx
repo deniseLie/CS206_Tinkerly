@@ -19,22 +19,28 @@ export default function ServiceProviderBrowse() {
   const [activeFilter, setActiveFilter] = useState<string>("Recommended");
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
 
-    const allServices = [
-        { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
-        { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
-        { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
-        { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
-    ];
+  // All Service
+  const allServices = [
+      { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
+      { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
+      { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
+      { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
+  ];
 
-    const filteredServices = allServices
-        .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
-        .sort((a, b) => {
-            if (activeFilter === "Recommended") return b.rating - a.rating;
-            if (activeFilter === "Nearby") return parseFloat(a.distance) - parseFloat(b.distance);
-            if (activeFilter === "Highest Rated") return b.rating - a.rating;
-            return 0;
-        });
-
+  // Filter service
+  const filteredServices = allServices
+      .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      .sort((a, b) => {
+          if (activeFilter === "Recommended") return b.rating - a.rating;
+          if (activeFilter === "Nearby") return parseFloat(a.distance) - parseFloat(b.distance);
+          if (activeFilter === "Highest Rated") return b.rating - a.rating;
+          return 0;
+      });
+  
+  // Book Service
+  const bookService = (service) => {
+    console.log(service);
+  }
 
   return (
     <View style={styles.container}>
@@ -85,11 +91,11 @@ export default function ServiceProviderBrowse() {
                 key={index}
                 href={{
                 pathname: `/serviceProvider/serviceProviderPage`,
-                params: {service: service}
+                params: {service: JSON.stringify(service), selectedDateTime: true}
                 }}
                 style={{ textDecorationLine: 'none' }}
             >
-                <ServiceProviderCard service={service}/>
+                <ServiceProviderCard service={service} serviceOnPress={() => bookService(service)}/>
             </Link>
             ))}
         </View>

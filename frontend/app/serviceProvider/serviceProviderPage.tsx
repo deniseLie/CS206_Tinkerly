@@ -9,7 +9,9 @@ import CalendarPrice from '@/components/calendarPrice';
 
 export default function ServiceProviderPage ({}) {
 
-    const { service } = useLocalSearchParams();
+    const { service, selectedDateTime = null } = useLocalSearchParams();
+    const parsedService = service ? JSON.parse(service) : null;
+
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -33,7 +35,7 @@ export default function ServiceProviderPage ({}) {
     const handleShare = async (date) => {
         try {
             await Share.share({
-                message: `Check out ${service.name} for ${service} services!`,
+                message: `Check out ${parsedService.name} for ${parsedService} services!`,
             });
         } catch (error) {
             Alert.alert('Error', 'Unable to share at the moment.');
@@ -42,9 +44,12 @@ export default function ServiceProviderPage ({}) {
 
     // Booking handler
     const handleBook = (date) => {
+        if (selectedDateTime) {
+            console.log(parsedService);
+            return;
+        }
 
         setSelectedDate(date);
-        
         router.push({
             
         })
@@ -58,13 +63,13 @@ export default function ServiceProviderPage ({}) {
 
             {/* Service Provider Info */}
             <View style={styles.card}>
-                <Text style={styles.name}>{service.name || "Ah Beng"}</Text>
-                <Text style={styles.service}>{service.service || "Aircon Service"}</Text>
+                <Text style={styles.name}>{parsedService.name || "Ah Beng"}</Text>
+                <Text style={styles.service}>{parsedService.service || "Aircon Service"}</Text>
                 <View style={styles.locationContainer}>
                     <FontAwesome name="map-marker" size={18} color="gray" />
-                    <Text style={styles.location}>{service.location}</Text>
+                    <Text style={styles.location}>{parsedService.location}</Text>
                 </View>
-                <Text style={styles.price}>Starting from {service.price || 50} SGD</Text>
+                <Text style={styles.price}>Starting from {parsedService.price || 50} SGD</Text>
             </View>
 
             {/* Buttons */}
@@ -81,26 +86,32 @@ export default function ServiceProviderPage ({}) {
             {/* Divider */}
             <Divider customStyle={styles.divider}/>
 
-            {/* Available Time slots */}
-            <View>
-                <Text style={styles.sectionTitle}>Available Time Slots</Text>
-                {Object.entries(availableTimes).map(([day, time]) => (
-                    <Text key={day} style={styles.timeslot}>{day}: {time}</Text>
-                ))}
-            </View>
+            {!selectedDateTime && (
+                <View>
+                    {/* Available Time slots */}
+                    <View>
+                        <Text style={styles.sectionTitle}>Available Time Slots</Text>
+                        {Object.entries(availableTimes).map(([day, time]) => (
+                            <Text key={day} style={styles.timeslot}>{day}: {time}</Text>
+                        ))}
+                    </View>
 
-            {/* Divider */}
-            <Divider customStyle={styles.divider}/>
+                    {/* Divider */}
+                    <Divider customStyle={styles.divider}/>
 
-            {/* Calendar View for Booking */}
-            <Text style={styles.sectionTitle}>Select Available Date</Text>
-            <CalendarPrice
-                selectedDate={selectedDate}
-                onDayPress={handleBook}
-            />
+                    {/* Calendar View for Booking */}
+                    <Text style={styles.sectionTitle}>Select Available Date</Text>
+                    <CalendarPrice
+                        selectedDate={selectedDate}
+                        onDayPress={handleBook}
+                    />
 
-            {/* Divider */}
-            <Divider customStyle={styles.divider}/>
+                    {/* Divider */}
+                    <Divider customStyle={styles.divider}/>
+                </View>
+            )}
+
+            
 
             {selectedDate && availableDates[selectedDate] && (
                 <Text style={styles.price}>Price: {availableDates[selectedDate].price}</Text>
@@ -191,7 +202,6 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 20,
     },
     button: {
         flex: 1,

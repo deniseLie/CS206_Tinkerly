@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-export default function ServiceProviderCard({ service }) {
+export default function ServiceProviderCard({ service, serviceOnPress }) {
   return (
     <View style={styles.cardContainer}>
         {/* <Image source={{ src: imageUri }} style={styles.profileImage} /> */}
@@ -25,7 +25,7 @@ export default function ServiceProviderCard({ service }) {
         </View>
 
         {/* Price */}
-        <Pressable style={styles.priceButton}>
+        <Pressable style={styles.priceButton} onPress={serviceOnPress}>
             <Text style={styles.priceText}>{service.price} SGD</Text>
         </Pressable>
     </View>

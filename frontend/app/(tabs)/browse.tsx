@@ -68,7 +68,7 @@ export default function Browse() {
           <Link
             key={index}
             href={{
-              pathname: `serviceProviderPage`,
+              pathname: `/serviceProvider/serviceProviderPage`,
               params: {service: service}
             }}
             style={{ textDecorationLine: 'none' }}
