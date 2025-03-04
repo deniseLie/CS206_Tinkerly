@@ -8,18 +8,34 @@ import {
     FlatList,
     Dimensions,
 } from 'react-native';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
+import BackButton from '@/components/BackButton';
 
-const AirConServices = () => {
+const Description = () => {
+    const router = useRouter();
     const services = [
         { id: '1', category: 'AC Installation', providers: '15 Service Providers', price: '25 - 50 SGD' },
         { id: '2', category: 'AC Repair', providers: '15 Service Providers', price: '25 - 50 SGD' },
         { id: '3', category: 'AC Replacement', providers: '15 Service Providers', price: '25 - 50 SGD' },
     ];
 
+    const onPressService = (item) => {
+        console.log(item);
+        router.push({
+            pathname: "/issue/describeissue",
+            params: {
+                data: JSON.stringify({
+                service: JSON.stringify(item),
+                })
+            }
+            })
+    }
+
     const renderService = ({ item }) => (
         <TouchableOpacity 
         style={styles.serviceCard}
-        onPress={() => navigation.navigate('describeissue')}>
+        onPress={() => onPressService(item)}
+        >
             <Text style={styles.serviceCategory}>{item.category}</Text>
             <Text style={styles.serviceDetails}>{item.providers}</Text>
             <Text style={styles.serviceDetails}>{item.price}</Text>
@@ -28,6 +44,8 @@ const AirConServices = () => {
 
     return (
         <View style={styles.container}>
+            {/* Back Button */}
+            <BackButton text={"Back"} />
             {/* Search Bar */}
             <View style={styles.header}>
                 <TextInput
@@ -53,14 +71,13 @@ const screenHeight = Dimensions.get('window').height; // Define screenHeight her
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 40,
         backgroundColor: '#f5f5f5',
         flex: 1,
-        paddingTop: 40,
     },
     header: {
         paddingHorizontal: 20,
         paddingVertical: 30,
-        backgroundColor: '#41A48F',
     },
     searchInput: {
         backgroundColor: '#fff',
@@ -98,6 +115,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3, // Shadow for Android
+        height: screenHeight / 6,
     },
     serviceCategory: {
         fontSize: 16,
@@ -110,4 +128,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AirConServices;
+export default Description;

@@ -9,10 +9,11 @@ import {
     Dimensions,
     Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 
 const HomeScreen = () => {
+    
+    const router = useRouter();
     const services = [
         { id: '1', name: 'Home Cleaning', icon: require('../../assets/icons/homecleaning.webp') },
         { id: '2', name: 'Deep Cleaning', icon: require('../../assets/icons/deepcleaning.png') },
@@ -36,25 +37,39 @@ const HomeScreen = () => {
         { id: '9', title: 'Kim Chuan Services', type: 'Electrical | AC', distance: '1 km away' },
     ];
 
+    const onPressService = (item) => {
+        console.log(item);
+        router.push({
+            pathname: "/issue/description",
+            params: {
+              data: JSON.stringify({
+                service: JSON.stringify(item),
+              })
+            }
+          })
+    }
+
     const renderService = ({ item }) => (
         <TouchableOpacity 
-        style={styles.serviceTypeBox}>
+            style={styles.serviceTypeBox}
+            onPress={() => onPressService(item)}
+        >
             <Image source={item.icon} style={styles.serviceTypeIcon} />
             <Text style={styles.serviceText}>{item.name}</Text>
         </TouchableOpacity>
     );
 
     const renderListing = ({ item, index }) => (
-        <TouchableOpacity 
-            style={[
-                styles.serviceTypeBox,
-                index < 4 && styles.sponsoredBox,  // Apply the style to the first 4 items or adjust as needed
-            ]}
-        >
-            <Text style={styles.listingTitle}>{item.title}</Text>
-            <Text style={styles.listingType}>{item.type}</Text>
-            <Text style={styles.listingDistance}>{item.distance}</Text>
-        </TouchableOpacity>
+            <TouchableOpacity 
+                style={[
+                    styles.serviceTypeBox,
+                    styles.sponsoredBox,  // Apply the style to the first 4 items or adjust as needed
+                ]}
+            >
+                <Text style={styles.listingTitle}>{item.title}</Text>
+                <Text style={styles.listingType}>{item.type}</Text>
+                <Text style={styles.listingDistance}>{item.distance}</Text>
+            </TouchableOpacity>
     );
 
     return (

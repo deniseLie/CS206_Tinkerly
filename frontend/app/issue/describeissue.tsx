@@ -8,11 +8,15 @@ import {
     Image,
     Dimensions,
 } from 'react-native';
+import BackButton from '@/components/BackButton';
 
-const ACRepairForm = () => {
+const DescribeIssue = () => {
     return (
         <View style={styles.container}>
             {/* Header */}
+            {/* Back Button */}
+            <BackButton text={"Back"}/>
+
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>AC Repair</Text>
             </View>
@@ -35,7 +39,7 @@ const ACRepairForm = () => {
                 multiline={true}
                 numberOfLines={4} // Optional: Sets a default height
                 textAlignVertical="top" // Ensures text starts at the top
-            />
+            ></TextInput>
 
             {/* Service Date & Time */}
             <Text style={styles.sectionTitle}>Service date & Time</Text>
@@ -71,9 +75,9 @@ const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 40,
         backgroundColor: '#f5f5f5',
         flex: 1,
-        paddingTop: 40,
     },
     header: {
         paddingHorizontal: 20,
@@ -149,4 +153,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ACRepairForm;
+export default DescribeIssue;
