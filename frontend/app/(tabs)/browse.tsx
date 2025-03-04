@@ -69,7 +69,7 @@ export default function Browse() {
             key={index}
             href={{
               pathname: `/serviceProvider/serviceProviderPage`,
-              params: {service: service}
+              params: {service: JSON.stringify(service)}
             }}
             style={{ textDecorationLine: 'none' }}
           >
