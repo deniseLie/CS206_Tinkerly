@@ -3,8 +3,11 @@ import CalendarPrice from "@/components/calendarPrice";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useRouter } from "expo-router";
 
 const BookingScreen = () => {
+  
+  const router = useRouter();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -20,9 +23,9 @@ const BookingScreen = () => {
     })
   );
 
+  // Set the selected date
   const onDayPress = (day) => {
-    console.log(day);  // Log day to console for debugging
-    setSelectedDate(day.dateString);  // Set the selected date
+    setSelectedDate(day.dateString);  
   };
 
   // Data for rendering the time slots
@@ -31,6 +34,21 @@ const BookingScreen = () => {
     label: item.label,
     value: item.value,
   }));
+
+  // Function: Find service provider
+  const findServiceProvider = () => {
+    if (selectedDate && selectedTime) {
+      router.push({
+        pathname: "/serviceProvider/serviceProviderBrowse",
+        params: {
+          data: JSON.stringify({
+            selectedDate: selectedDate,
+            selectedTime: selectedTime
+          })
+        }
+      })
+    }
+  }
 
   return (
     <View style={styles.container} keyboardShouldPersistTaps="handled">
@@ -63,8 +81,20 @@ const BookingScreen = () => {
       )}
 
       {/* Find Service Providers Button */}
-      <TouchableOpacity style={styles.findButtonContainer} disabled={!(selectedDate && selectedTime)}>
-        <Text style={styles.findButtonText}>Find Service Providers</Text>
+      <TouchableOpacity 
+        style={[
+          styles.findButtonContainer,
+          !(selectedDate && selectedTime) && styles.disabledBtnContainer
+        ]} 
+        disabled={!(selectedDate && selectedTime)}
+        onPress={findServiceProvider}
+      >
+        <Text style={[
+          styles.findButtonText,
+          !(selectedDate && selectedTime) && styles.disabledBtnText
+        ]}>
+          Find Service Providers
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -105,12 +135,18 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginTop: 40,
   },
+  disabledBtnContainer: {
+    backgroundColor: "#C4C4C4",
+  },
   findButtonText: {
     color: "white",
     textAlign: "center",
     fontSize: 18,
     fontWeight: 'bold'
   },
+  disabledBtnText: {
+    color: '#605E5E'
+  }
 });
 
 export default BookingScreen;

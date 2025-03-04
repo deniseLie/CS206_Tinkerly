@@ -33,7 +33,8 @@ export default function RootLayout() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="serviceProviderPage" options={{ headerShown: false }} />
+          <Stack.Screen name="serviceProvider/serviceProviderPage" options={{ headerShown: false }} />
+          <Stack.Screen name="serviceProvider/serviceProviderBrowse" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

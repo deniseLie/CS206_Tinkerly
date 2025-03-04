@@ -41,13 +41,13 @@ export default function ServiceProviderPage ({}) {
     };
 
     // Booking handler
-    const handleBook = () => {
-        if (!selectedDate) {
-            Alert.alert('Select Date and Time', 'Please select a date and time to book.');
-            return;
-        }
-        Alert.alert('Booking Confirmed', `You have booked ${name} on ${selectedDate.toLocaleString()}`);
-        router.back();  // Navigate back after booking
+    const handleBook = (date) => {
+
+        setSelectedDate(date);
+        
+        router.push({
+            
+        })
     };
 
     return (

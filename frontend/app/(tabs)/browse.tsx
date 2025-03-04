@@ -9,14 +9,26 @@ import { Link } from 'expo-router';
 
 export default function Browse() {
 
+  // State
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilter, setActiveFilter] = useState<string>("Recommended");
-
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
-  const services = [
-    { name: 'Bugis Air-Con', services : "AC Services", distance : "1 km", rating : 4.85, reviews : "11.9k", price: 55 },
-    { name: 'Kim Chuan Air-Con', services : "AC Services", distance : "1 km", rating : 4.85, reviews : "11.9k", price: 50 },
+
+  const allServices = [
+    { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
+    { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
+    { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
+    { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
   ];
+
+  const filteredServices = allServices
+    .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => {
+      if (activeFilter === "Recommended") return b.rating - a.rating;
+      if (activeFilter === "Nearby") return parseFloat(a.distance) - parseFloat(b.distance);
+      if (activeFilter === "Highest Rated") return b.rating - a.rating;
+      return 0;
+    });
 
   return (
     <View style={styles.container}>
@@ -25,7 +37,7 @@ export default function Browse() {
       
       <Text style={styles.headerText}>All Services</Text>
       <Text style={styles.subHeadertext}>6842 Service Providers</Text>
-      
+
       {/* Search Service provider */}
       <View style={styles.searchFilterProviderContainer}>
         <FontAwesome size={30} name="filter" color={"gray"}/>
@@ -52,11 +64,11 @@ export default function Browse() {
 
       {/* Services */}
       <View style={styles.servicesContainer}>
-        {services?.map((service, index) => (
+        {filteredServices?.map((service, index) => (
           <Link
             key={index}
             href={{
-              pathname: `/serviceProviderPage`,
+              pathname: `serviceProviderPage`,
               params: {service: service}
             }}
             style={{ textDecorationLine: 'none' }}
