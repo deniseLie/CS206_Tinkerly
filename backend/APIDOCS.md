@@ -556,9 +556,3 @@
 ## Testing the Endpoints
 
 You can use tools like [Postman](https://www.postman.com/) or [cURL](https://curl.se/) to test the API endpoints.
-
-### Example cURL Commands
-
-- **Create a new customer**
-  ```sh
-  curl -X POST http://localhost:3000/customers -H "Content-Type: application/json" -d '{"name": "John Doe", "address": "123 Main St", "phoneNumber": "1234567890"}'
