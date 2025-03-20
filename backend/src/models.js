@@ -110,6 +110,20 @@ const Service = sequelize.define('Service', {
   time: {
     type: DataTypes.TIME,
   },
+  customerID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'customers', // Name of the target table
+      key: 'customerID', // Key in the target table
+    },
+  },
+  typeID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'service_types', // Name of the target table
+      key: 'typeID', // Key in the target table
+    },
+  },
 }, {
   tableName: 'services',
   timestamps: false,
@@ -131,6 +145,13 @@ const ServiceReview = sequelize.define('ServiceReview', {
   comments: {
     type: DataTypes.TEXT,
   },
+  serviceID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'services', // Name of the target table
+      key: 'serviceID', // Key in the target table
+    },
+  },
 }, {
   tableName: 'service_reviews',
   timestamps: false,
@@ -151,6 +172,13 @@ const Payment = sequelize.define('Payment', {
   paymentIsDefault: {
     type: DataTypes.BOOLEAN,
   },
+  customerID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'customers', // Name of the target table
+      key: 'customerID', // Key in the target table
+    },
+  },
 }, {
   tableName: 'payment',
   timestamps: false,
@@ -170,6 +198,13 @@ const ServiceType = sequelize.define('ServiceType', {
   },
   consultPrice: {
     type: DataTypes.FLOAT,
+  },
+  spID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'service_providers', // Name of the target table
+      key: 'spID', // Key in the target table
+    },
   },
 }, {
   tableName: 'service_types',
@@ -246,7 +281,7 @@ module.exports = {
 };
 
 // Sync models with the database
-sequelize.sync({ alter: true }) // Use { force: true } to drop & recreate tables
+sequelize.sync({ alter: { drop: false } }) // Prevent dropping non-existent constraints
   .then(() => {
     console.log('All models are synchronized with Supabase!');
   })
