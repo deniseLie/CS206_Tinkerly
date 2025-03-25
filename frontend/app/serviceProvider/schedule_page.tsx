@@ -53,7 +53,8 @@ const BookingScreen = () => {
   return (
     <View style={styles.container} keyboardShouldPersistTaps="handled">
 
-      <BackButton text="Schedule"/>
+      <BackButton text="Schedule" noMargin={true}/>
+
       <CalendarPrice
         selectedDate={selectedDate}
         onDayPress={onDayPress}

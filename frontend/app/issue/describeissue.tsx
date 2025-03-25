@@ -15,27 +15,35 @@ import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 const DescribeIssue = () => {
     const router = useRouter();
 
-    const onPressService = (item) => {
-        console.log(item);
+    // Params
+    const { data = null } = useLocalSearchParams();
+    const parsedData = data ? JSON.parse(data) : null;
+
+    const onPressService = () => {
         router.push({
-            pathname: "/serviceProvider/serviceProviderBrowse",
+            pathname: "/serviceProvider/schedule_page",
             params: {
                 data: JSON.stringify({
-                service: JSON.stringify(item),
+                    description: description,
+                    urgency: activeButton,
+                    ...parsedData
                 })
             }
             })
     }
 
+    const [description, setDescription] = useState('');
     const [activeButton, setActiveButton] = useState('urgent'); // Default to "urgent"
 
     // State to manage the image source
     const [imageSource, setImageSource] = useState(require('../../assets/icons/camera.png')); // Default image
+    const [isImageUploaded, setIsImageUploaded] = useState(false); // Track if an image is uploaded
 
     // Function to handle image change
     const handleImageChange = () => {
         // Update the image source (use another local or remote image)
         setImageSource(require('../../assets/camerapics/airconleaking.jpg')); // Replace with your new image path
+        setIsImageUploaded(true); // Mark image as uploaded
     };
 
     const toggleModal = () => {
@@ -54,73 +62,78 @@ const DescribeIssue = () => {
                 <Text style={styles.headerTitle}>AC Repair</Text>
             </View>
 
-            {/* Upload Section */}
-            <Text style={styles.sectionTitle}>Upload Photos and/or Videos</Text>
-            <TouchableOpacity style={styles.uploadBox} onPress={handleImageChange}>
-                <Image 
-                    source={imageSource} 
-                    style={styles.uploadImage} 
-                />
-            </TouchableOpacity>
+            <View style={{ marginHorizontal: 20 }}>
 
-            {/* Brief Description */}
-            <Text style={styles.sectionTitle}>Brief Description</Text>
-            <TextInput
-                style={styles.descriptionArea}
-                placeholder="Provide relevant details such as type of AC, description of damage, etc."
-                placeholderTextColor="#aaa"
-                multiline={true}
-                numberOfLines={4} // Optional: Sets a default height
-                textAlignVertical="top" // Ensures text starts at the top
-            ></TextInput>
-
-            {/* Service Date & Time */}
-            <Text style={styles.sectionTitle}>Service date & Time</Text>
-            <View style={styles.buttonGroup}>
-                <TouchableOpacity
-                    style={[
-                        styles.buttonBox,
-                        activeButton === 'urgent' && styles.activeButtonBox,
-                    ]}
-                    onPress={() => setActiveButton('urgent')}
-                >
-                    <Text
-                        style={[
-                            styles.buttonText,
-                            activeButton === 'urgent' && styles.activeButtonText,
-                        ]}
-                    >
-                        Urgent (today)
-                    </Text>
+                {/* Upload Section */}
+                <Text style={styles.sectionTitle}>Upload Photos and/or Videos</Text>
+                <TouchableOpacity style={styles.uploadBox} onPress={handleImageChange}>
+                    <Image 
+                        source={imageSource} 
+                        style={styles.uploadImage} 
+                    />
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.buttonBox,
-                        activeButton === 'schedule' && styles.activeButtonBox,
-                    ]}
-                    onPress={() => setActiveButton('schedule')}
-                >
-                    <Text
+
+                {/* Brief Description */}
+                <Text style={styles.sectionTitle}>Brief Description</Text>
+                <TextInput
+                    style={styles.descriptionArea}
+                    placeholder="Provide relevant details such as type of AC, description of damage, etc."
+                    placeholderTextColor="#aaa"
+                    multiline={true}
+                    numberOfLines={4} // Optional: Sets a default height
+                    textAlignVertical="top" // Ensures text starts at the top
+                    value={description}
+                    onChangeText={setDescription}
+                ></TextInput>
+
+                {/* Service Date & Time */}
+                <Text style={styles.sectionTitle}>Service date & Time</Text>
+                <View style={styles.buttonGroup}>
+                    <TouchableOpacity
                         style={[
-                            styles.buttonText,
-                            activeButton === 'schedule' && styles.activeButtonText,
+                            styles.buttonBox,
+                            activeButton === 'urgent' && styles.activeButtonBox,
                         ]}
+                        onPress={() => setActiveButton('urgent')}
                     >
-                        Schedule for later
-                    </Text>
+                        <Text
+                            style={[
+                                styles.buttonText,
+                                activeButton === 'urgent' && styles.activeButtonText,
+                            ]}
+                        >
+                            Urgent (today)
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.buttonBox,
+                            activeButton === 'schedule' && styles.activeButtonBox,
+                        ]}
+                        onPress={() => setActiveButton('schedule')}
+                    >
+                        <Text
+                            style={[
+                                styles.buttonText,
+                                activeButton === 'schedule' && styles.activeButtonText,
+                            ]}
+                        >
+                            Schedule for later
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+
+                {/* Confirm Address */}
+                <Text style={styles.sectionTitle}>Confirm Address</Text>
+                <TouchableOpacity style={styles.addressButton} onPress={toggleModal}>
+                    <Image
+                        source={require('../../assets/icons/maps.png')}
+                        style={styles.addressIcon}
+                    />
+                    <Text style={styles.addressText}>Your House</Text>
                 </TouchableOpacity>
             </View>
-
-
-            {/* Confirm Address */}
-            <Text style={styles.sectionTitle}>Confirm Address</Text>
-            <TouchableOpacity style={styles.addressButton} onPress={toggleModal}>
-                <Image
-                    source={require('../../assets/icons/maps.png')}
-                    style={styles.addressIcon}
-                />
-                <Text style={styles.addressText}>Your House</Text>
-            </TouchableOpacity>
 
             {/* Modal for Address Confirmation */}
             <Modal
@@ -143,7 +156,14 @@ const DescribeIssue = () => {
             </Modal>
 
             {/* Continue Button */}
-            <TouchableOpacity style={styles.continueButton} onPress={() => onPressService()}>
+            <TouchableOpacity 
+                style={[
+                    styles.continueButton, 
+                    (!description || !activeButton || !parsedData || !isImageUploaded) && styles.disabledButton
+                ]} 
+                onPress={onPressService}
+                disabled={!description || !activeButton || !parsedData|| !isImageUploaded}
+            >
                 <Text style={styles.continueButtonText}>Continue</Text>
             </TouchableOpacity>
 
@@ -163,6 +183,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 30,
         backgroundColor: '#41A48F',
+        marginTop: 10
     },
     headerTitle: {
         color: '#fff',
@@ -185,8 +206,7 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
     },
     uploadImage: {
-        width: 80,
-        height: 80,
+        height: 130,
         resizeMode: 'contain',
     },
     descriptionArea: {
@@ -254,6 +274,9 @@ const styles = StyleSheet.create({
         alignSelf:'center', 
          width:'60%',
      }, 
+     disabledButton: {
+        backgroundColor: '#ccc', // Greyed out when disabled
+    },    
     modalOverlay: {
         flex: 1,
         justifyContent: 'center',

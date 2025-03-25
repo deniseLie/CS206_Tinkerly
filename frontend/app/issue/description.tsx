@@ -25,7 +25,7 @@ const Description = () => {
             pathname: "/issue/describeissue",
             params: {
                 data: JSON.stringify({
-                service: JSON.stringify(item),
+                    service: JSON.stringify(item),
                 })
             }
             })
