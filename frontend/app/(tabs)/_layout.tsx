@@ -3,10 +3,11 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { IconSymbol } from '@/components/ui/IconSymbol'; // MatieralIcons
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -37,7 +38,21 @@ export default function TabLayout() {
         name="browse"
         options={{
           title: 'Browse',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="search" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="order"
+        options={{
+          title: 'Orders',
+          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="receipt" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="person" color={color} />,
         }}
       />
     </Tabs>
