@@ -1,18 +1,3 @@
-// const { Sequelize, DataTypes } = require('sequelize');
-
-// // Initialize Sequelize connection (update with your DB details)
-// const sequelize = new Sequelize(
-//   process.env.DB_NAME || 'TinkerlyDB',
-//   process.env.DB_USER || 'Admin',
-//   process.env.DB_PASS || '12345678',
-//   {
-//     host: process.env.DB_HOST || 'localhost',
-//     dialect: 'mysql',
-//     port: process.env.DB_PORT || 3306,
-//     dialectModule: require('mysql2'),
-//   }
-// );
-
 // Load environment variables from .env file
 require('dotenv').config();
 
@@ -38,15 +23,6 @@ const sequelize = new Sequelize(
   }
 );
 
-// Test the connection
-// sequelize.authenticate()
-//   .then(() => {
-//     console.log('Connection to Supabase PostgreSQL has been established successfully.');
-//   })
-//   .catch(err => {
-//     console.error('Unable to connect to the database:', err);
-//   });
-
 // =======================
 // Customer Model (formerly User)
 // =======================
@@ -62,10 +38,6 @@ const Customer = sequelize.define('Customer', {
   },
   address: {
     type: DataTypes.STRING,
-  },
-  bankAccount: {
-    type: DataTypes.STRING,
-    // Consider storing tokens or references rather than raw bank data for security
   },
   phoneNumber: {
     type: DataTypes.STRING,
@@ -102,6 +74,13 @@ const ServiceProvider = sequelize.define('ServiceProvider', {
     type: DataTypes.FLOAT,
     defaultValue: 0,
   },
+  category: {
+    type: DataTypes.STRING,
+  },
+  distance: {
+    type: DataTypes.FLOAT,
+    defaultValue: 1,
+  },
 }, {
   tableName: 'service_providers',
   timestamps: false,
@@ -116,14 +95,13 @@ const Service = sequelize.define('Service', {
     primaryKey: true,
     autoIncrement: true,
   },
-  serviceType: {
+  extraRequirement: {
     type: DataTypes.STRING,
-    allowNull: false,
   },
   description: {
     type: DataTypes.TEXT,
   },
-  basePrice: {
+  finalPrice: {
     type: DataTypes.FLOAT,
   },
   date: {
@@ -131,6 +109,20 @@ const Service = sequelize.define('Service', {
   },
   time: {
     type: DataTypes.TIME,
+  },
+  customerID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'customers', // Name of the target table
+      key: 'customerID', // Key in the target table
+    },
+  },
+  typeID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'service_types', // Name of the target table
+      key: 'typeID', // Key in the target table
+    },
   },
 }, {
   tableName: 'services',
@@ -153,8 +145,69 @@ const ServiceReview = sequelize.define('ServiceReview', {
   comments: {
     type: DataTypes.TEXT,
   },
+  serviceID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'services', // Name of the target table
+      key: 'serviceID', // Key in the target table
+    },
+  },
 }, {
   tableName: 'service_reviews',
+  timestamps: false,
+});
+
+const Payment = sequelize.define('Payment', {
+  paymentID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  paymentType: {
+    type: DataTypes.TEXT,
+  },
+  paymentDescription: {
+    type: DataTypes.TEXT,
+  },
+  paymentIsDefault: {
+    type: DataTypes.BOOLEAN,
+  },
+  customerID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'customers', // Name of the target table
+      key: 'customerID', // Key in the target table
+    },
+  },
+}, {
+  tableName: 'payment',
+  timestamps: false,
+});
+
+const ServiceType = sequelize.define('ServiceType', {
+  typeID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  type: {
+    type: DataTypes.TEXT,
+  },
+  basePrice: {
+    type: DataTypes.FLOAT,
+  },
+  consultPrice: {
+    type: DataTypes.FLOAT,
+  },
+  spID: { // Add this attribute
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'service_providers', // Name of the target table
+      key: 'spID', // Key in the target table
+    },
+  },
+}, {
+  tableName: 'service_types',
   timestamps: false,
 });
 
@@ -162,9 +215,13 @@ const ServiceReview = sequelize.define('ServiceReview', {
 // Associations
 // =======================
 
-// A Service is provided by one Service Provider
-Service.belongsTo(ServiceProvider, { foreignKey: 'spID' });
-ServiceProvider.hasMany(Service, { foreignKey: 'spID' });
+Service.belongsTo(ServiceType, { foreignKey: 'typeID' });
+ServiceType.hasMany(Service, { foreignKey: 'typeID' });
+
+ServiceType.belongsTo(ServiceProvider, {foreignKey: 'spID'})
+ServiceProvider.hasMany(ServiceType, {foreignKey: 'spID'})
+// ServiceType.belongsTo(ServiceProvider, { foreignKey: 'spID', as: 'ServiceProvider' });
+// ServiceProvider.hasMany(ServiceType, { foreignKey: 'spID', as: 'ServiceTypes' });
 
 // A Service is requested by one Customer
 Service.belongsTo(Customer, { foreignKey: 'customerID' });
@@ -172,11 +229,43 @@ Customer.hasMany(Service, { foreignKey: 'customerID' });
 
 // A ServiceReview is associated with a Service
 ServiceReview.belongsTo(Service, { foreignKey: 'serviceID' });
-Service.hasMany(ServiceReview, { foreignKey: 'serviceID' });
+Service.hasOne(ServiceReview, { foreignKey: 'serviceID' });
 
-// A ServiceReview can be written by a Customer (if you want to capture the reviewer)
-ServiceReview.belongsTo(Customer, { foreignKey: 'customerID' });
-Customer.hasMany(ServiceReview, { foreignKey: 'customerID' });
+Customer.hasMany(Payment, { foreignKey: 'customerID' });
+Payment.belongsTo(Customer, { foreignKey: 'customerID' });
+
+// Service.beforeCreate(async (service, options) => {
+//   if (service.typeID) {
+//     // Get the associated ServiceType along with its ServiceProvider
+//     const serviceType = await sequelize.models.ServiceType.findByPk(service.typeID, {
+//       include: [{
+//         model: sequelize.models.ServiceProvider,
+//         as: 'ServiceProvider' // Alias if defined in association, or leave out if not using alias.
+//       }]
+//     });
+//     if (serviceType) {
+//       const basePrice = serviceType.basePrice || 0;
+//       const consultPrice = serviceType.consultPrice || 0;
+//       let providerDistance = 0;
+      
+//       // Try to get the distance from the included ServiceProvider
+//       if (serviceType.ServiceProvider) {
+//         providerDistance = serviceType.ServiceProvider.distance || 0;
+//       } else if (serviceType.spID) {
+//         // If the association wasn't included, fetch the provider manually.
+//         const provider = await sequelize.models.ServiceProvider.findByPk(serviceType.spID);
+//         providerDistance = provider ? provider.distance || 0 : 0;
+//       }
+      
+//       let distanceCost = providerDistance * 2.5;
+//       if (distanceCost > 30) distanceCost = 30;
+
+//       // Compute finalPrice using the formula:
+//       service.finalPrice = basePrice + consultPrice + distanceCost;
+      
+//     }
+//   }
+// });
 
 // =======================
 // Export models and connection
@@ -187,13 +276,15 @@ module.exports = {
   ServiceProvider,
   Service,
   ServiceReview,
+  ServiceType,
+  Payment
 };
 
 // Sync models with the database
-sequelize.sync({ alter: true }) // Use { force: true } to drop & recreate tables
+sequelize.sync({ alter: { drop: false } }) // Prevent dropping non-existent constraints
   .then(() => {
-    console.log('✅ All models are synchronized with Supabase!');
+    console.log('All models are synchronized with Supabase!');
   })
   .catch(err => {
-    console.error('❌ Error syncing models:', err);
+    console.error('Error syncing models:', err);
   });
