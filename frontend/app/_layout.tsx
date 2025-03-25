@@ -35,6 +35,8 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="serviceProvider/serviceProviderPage" options={{ headerShown: false }} />
           <Stack.Screen name="serviceProvider/serviceProviderBrowse" options={{ headerShown: false }} />
+          <Stack.Screen name="issue/description" options={{ headerShown: false }} />
+          <Stack.Screen name="issue/describeissue" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

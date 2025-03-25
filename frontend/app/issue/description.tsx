@@ -8,17 +8,15 @@ import {
     FlatList,
     Dimensions,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from '@/components/BackButton';
 
 const Description = () => {
     const router = useRouter();
-    const { title } = useLocalSearchParams();
-
     const services = [
-        { id: '1', category: 'Installation', providers: '15 Service Providers', price: '25 - 50 SGD' },
-        { id: '2', category: 'Repair', providers: '15 Service Providers', price: '25 - 50 SGD' },
-        { id: '3', category: 'Replacement', providers: '15 Service Providers', price: '25 - 50 SGD' },
+        { id: '1', category: 'AC Installation', providers: '15 Service Providers', price: '25 - 50 SGD' },
+        { id: '2', category: 'AC Repair', providers: '15 Service Providers', price: '25 - 50 SGD' },
+        { id: '3', category: 'AC Replacement', providers: '15 Service Providers', price: '25 - 50 SGD' },
     ];
 
     const onPressService = (item) => {
@@ -27,16 +25,16 @@ const Description = () => {
             pathname: "/issue/describeissue",
             params: {
                 data: JSON.stringify({
-                    service: JSON.stringify(item),
+                service: JSON.stringify(item),
                 })
             }
-        });
-    };
+            })
+    }
 
     const renderService = ({ item }) => (
         <TouchableOpacity 
-            style={styles.serviceCard}
-            onPress={() => onPressService(item)}
+        style={styles.serviceCard}
+        onPress={() => onPressService(item)}
         >
             <Text style={styles.serviceCategory}>{item.category}</Text>
             <Text style={styles.serviceDetails}>{item.providers}</Text>
@@ -46,15 +44,18 @@ const Description = () => {
 
     return (
         <View style={styles.container}>
+            {/* Back Button */}
             <BackButton text={"Back"} />
-            <Text style={styles.headerTitle}>{title || "Default Title"}</Text>
+            {/* Search Bar */}
             <View style={styles.header}>
                 <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search For Services"
-                    placeholderTextColor="#aaa"
+                style={styles.searchInput}
+                placeholder="Search For Services"
+                placeholderTextColor="#aaa"
                 />
             </View>
+
+            {/* Services Section */}
             <FlatList
                 data={services}
                 keyExtractor={(item) => item.id}
@@ -73,13 +74,6 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         backgroundColor: '#f5f5f5',
         flex: 1,
-    },
-    headerTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#41A48F',
-        textAlign: 'center',
-        marginVertical: 20,
     },
     header: {
         paddingHorizontal: 20,
