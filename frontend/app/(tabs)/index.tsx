@@ -1,74 +1,77 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, Image } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const HomeScreen = () => {
+    
+    const router = useRouter();
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+    const services = [
+        // { id: '1', name: 'Home Cleaning', icon: require('../../assets/icons/homecleaning.webp') },
+        // { id: '2', name: 'Deep Cleaning', icon: require('../../assets/icons/deepcleaning.png') },
+        // { id: '3', name: 'Air-con Servicing', icon: require('../../assets/icons/aircon.png') },
+        // { id: '4', name: 'Laundry', icon: require('../../assets/icons/laundry.png') },
+        // { id: '5', name: 'Electrical', icon: require('../../assets/icons/electrical.png') },
+        // { id: '6', name: 'Plumbing', icon: require('../../assets/icons/plumbing.png') },
+        // { id: '7', name: 'Repair & Assembly', icon: require('../../assets/icons/repair.png') },
+        // { id: '8', name: 'Pest Control', icon: require('../../assets/icons/pestcontrol.png') },
+    ];
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+    const listings = [
+        { id: '1', title: 'Bugis Electricians', type: 'Electrical | AC', distance: '1.7 km away' },
+        { id: '2', title: 'UrbanFix Experts', type: 'AC', distance: '1.9 km away' },
+        { id: '3', title: 'Swift Home Solutions', type: 'Electrical | Plumbing', distance: '2 km away' },
+        { id: '4', title: 'BrightNest Services', type: 'Plumbing | Lockpick', distance: '5 km away' },
+        { id: '5', title: 'Hong Yi Assistance', type: 'Homecleaning | AC', distance: '10+ km away' },
+        { id: '6', title: 'Taman Services', type: 'Electrical | AC', distance: '1 km away' },
+        { id: '7', title: 'Kaki Services', type: 'Electrical | AC', distance: '1 km away' },
+        { id: '8', title: 'HomeMate Assistance', type: 'Electrical | AC', distance: '1 km away' },
+        { id: '9', title: 'Kim Chuan Services', type: 'Electrical | AC', distance: '1 km away' },
+    ];
+
+    const onPressService = (item) => {
+        console.log(item);
+        router.push({
+            pathname: "/issue/description",
+            params: {
+                title: "AC Services",
+                data: JSON.stringify({
+                    service: JSON.stringify(item),
+                })
+            }
+          })
+    }
+
+    const renderService = ({ item }) => (
+        <TouchableOpacity 
+            style={styles.serviceTypeBox}
+            onPress={() => onPressService(item)}
+        >
+            <Image source={item.icon} style={styles.serviceTypeIcon} />
+            <Text style={styles.serviceText}>{item.name}</Text>
+        </TouchableOpacity>
+    );
+
+    const renderListing = ({ item, index }) => (
+            <TouchableOpacity 
+                style={[
+                    styles.serviceTypeBox,
+                    styles.sponsoredBox,  // Apply the style to the first 4 items or adjust as needed
+                ]}
+            >
+                <Text style={styles.listingTitle}>{item.title}</Text>
+                <Text style={styles.listingType}>{item.type}</Text>
+                <Text style={styles.listingDistance}>{item.distance}</Text>
+            </TouchableOpacity>
+    );
+
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            {/* {renderService} */}
+            {/* {listings.map((list, key) => renderListing(list))} */}
+        </View>
+    );
+};
+
+
+export default HomeScreen;
