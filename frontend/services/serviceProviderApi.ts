@@ -24,3 +24,9 @@ export const fetchServiceProviderById = async (id: string): Promise<ServiceProvi
     const response = await api.get(`/service-providers/${id}`);
     return response.data;
 };
+
+// Fetch a service providers who provide the Service Type
+export const fetchServiceProviderByServiceType = async (type: string): Promise<ServiceProvider> => {
+    const response = await api.get(`/service-providers/service-type/${type}`);
+    return response.data;
+};

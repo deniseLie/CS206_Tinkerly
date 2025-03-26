@@ -15,24 +15,23 @@ export default function BackButton({ text, noMargin = false, isHomeButton = fals
 
     return (
         <View>
-            <Pressable
-                style={[styles.backButton, noMargin && { marginLeft: 0 }]}
-                onPress={handlePress}
-            >
-                <FontAwesome name="arrow-left" size={20} color="#41A48F" />
-                {text && (
+            {text && (
+                <Pressable
+                    style={[styles.backButton, noMargin && { marginLeft: 0 }]}
+                    onPress={handlePress}
+                >
+                    <FontAwesome name="arrow-left" size={20} color="#41A48F" />
                     <Text style={styles.text}>{text}</Text>
-                )}
-
-                {isHomeButton && (
-                    <Pressable
-                        style={[styles.homeButton]}
-                        onPress={handleHomePress}
-                    >
-                        <Text style={[styles.text, { marginLeft: 10 }]}>Home</Text>
-                    </Pressable>
-                )}
-            </Pressable>
+                </Pressable>
+            )}
+            {isHomeButton && (
+                <Pressable
+                    style={[styles.homeButton]}
+                    onPress={handleHomePress}
+                >
+                    <Text style={[styles.text, { marginLeft: 10 }]}>Home</Text>
+                </Pressable>
+            )}
         </View>
     );
 }

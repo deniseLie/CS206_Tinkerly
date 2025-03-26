@@ -27,7 +27,7 @@ export default function ServiceProviderCard({ service, serviceOnPress }) {
         <View style={styles.priceContainer}>
           <Text>Starting From</Text>
           <Pressable style={styles.priceButton} onPress={serviceOnPress}>
-              <Text style={styles.priceText}>{service.price} SGD</Text>
+              <Text style={styles.priceText}>{service.price || 40} SGD</Text>
           </Pressable>
         </View>
     </View>

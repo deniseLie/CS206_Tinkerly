@@ -12,3 +12,9 @@ export const fetchServiceReviewById = async (id: string): Promise<ServiceReview>
     const response = await api.get(`/service-reviews/${id}`);
     return response.data;
 };
+
+// Get all the Service Reviews of a Service Provider
+export const fetchServiceReviewByServiceProviderId = async (id: string): Promise<ServiceReview> => {
+    const response = await api.get(`/service-reviews/service-provider/${id}`);
+    return response.data;
+};

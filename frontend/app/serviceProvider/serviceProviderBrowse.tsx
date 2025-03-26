@@ -7,7 +7,7 @@ import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Link, useLocalSearchParams } from 'expo-router';
 import BackButton from '@/components/BackButton';
-import { fetchServiceProviders } from '@/services/serviceProviderApi';
+import { fetchServiceProviderByServiceType, fetchServiceProviders } from '@/services/serviceProviderApi';
 
 export default function ServiceProviderBrowse() {
 
@@ -30,7 +30,9 @@ export default function ServiceProviderBrowse() {
     // function 
     const loadServiceProvider = async () => {
       try {
-        const data = await fetchServiceProviders();
+
+        const data = await fetchServiceProviderByServiceType("AC%20Repair");
+        // const data = await fetchServiceProviders();
         console.log('Fetch service provider', data);
         setServiceProviders(data);
       } catch (e) {

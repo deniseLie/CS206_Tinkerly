@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView, Alert, Share } from "react-native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { FontAwesome } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import { Calendar } from 'react-native-calendars';
 import Divider from '@/components/divider';
 import BackButton from '@/components/BackButton';
 import CalendarPrice from '@/components/calendarPrice';
+import { fetchServiceReviewByServiceProviderId } from '@/services/serviceReviewApi';
 
 export default function ServiceProviderPage ({}) {
 
@@ -15,12 +16,27 @@ export default function ServiceProviderPage ({}) {
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [isCalendarVisible, setCalendarVisible] = useState(false);
+    const [reviews, setReviews] = useState([]);
 
-    const reviews = [
-        { id: "1", name: "John Doe", rating: 5, comment: "Great service! Highly recommend." },
-        { id: "2", name: "Jane Smith", rating: 4, comment: "Very professional and on time!" },
-        { id: "3", name: "Mike Johnson", rating: 3, comment: "Good service, but could improve punctuality." },
-    ];
+    // const reviews = [
+    //     { id: "1", name: "John Doe", rating: 5, comment: "Great service! Highly recommend." },
+    //     { id: "2", name: "Jane Smith", rating: 4, comment: "Very professional and on time!" },
+    //     { id: "3", name: "Mike Johnson", rating: 3, comment: "Good service, but could improve punctuality." },
+    // ];
+
+    useEffect(() => {
+        fetchReviewProvider();
+    }, [])
+
+    const fetchReviewProvider = async() => {
+        try {
+            const data = await fetchServiceReviewByServiceProviderId(parsedData?.spID);
+            console.log('check dataa', data);
+            setReviews(data);
+        } catch (e) {
+            console.log("error fetch review service provider", e?.response?.data);
+        }
+    }
 
     // Share handler
     const handleShare = async (date) => {
@@ -123,20 +139,20 @@ export default function ServiceProviderPage ({}) {
             {/* Rating and Reviews */}
             <View style={[styles.reviewHeader, {"marginBottom": 10}]}>
                 <Text style={styles.sectionTitle}>Customer Reviews</Text>
-                <Text style={styles.reviewText}>({parsedData?.provider?.reviews})</Text>
+                <Text style={styles.reviewText}>({parsedData?.provider?.reviews?.length || reviews?.length})</Text>
                 <FontAwesome name="star" size={18} color="#fabb05" />
             </View>
             <View style={styles.ratingContainer}>
                 {reviews?.map((review, index) => (
                     <View style={styles.reviewCard} key={index}>
                         <View style={styles.reviewHeader}>
-                            <Text style={styles.reviewName}>{review.name}</Text>
+                            <Text style={styles.reviewName}>{review.name || "John Doe"}</Text>
                             <View style={styles.reviewRating}>
                                 <Text style={styles.reviewText}> {review.rating}</Text>
                                 <FontAwesome name="star" size={16} color="#fabb05" />
                             </View>
                         </View>
-                        <Text style={styles.reviewComment}>{review.comment}</Text>
+                        <Text style={styles.reviewComment}>{review.comments}</Text>
                     </View>
                 ))}
                 <Text style={styles.rating}>{parsedData?.provider?.rating}</Text>
