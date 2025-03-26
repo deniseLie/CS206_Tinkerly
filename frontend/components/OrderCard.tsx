@@ -17,6 +17,17 @@ type OrderProps = {
   trackOrder: boolean
 };
 
+const trackOrderPressed = () => {
+  router.push({
+    pathname: "/order/trackOrder",
+    params: {
+        data: JSON.stringify({
+            // service: item,
+        })
+    }
+})
+}
+
 const OrderCard = ({ order }: { order: OrderProps }) => {
   const subtotal = order.services.reduce((sum, service) => sum + service.price, 0) 
     + order.travellingCost + order.consultationFee;
@@ -67,7 +78,7 @@ const OrderCard = ({ order }: { order: OrderProps }) => {
         <ThemedView style={styles.buttonContainer}>
           <Pressable 
             style={styles.trackOrderButton}
-            onPress={() => router.push('/')}
+            onPress={trackOrderPressed}
           >
             <ThemedText style={styles.trackOrderText}>Track Order</ThemedText>
           </Pressable>

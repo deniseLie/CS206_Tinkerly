@@ -27,7 +27,7 @@ const Description = () => {
                     service: item,
                 })
             }
-            })
+        })
     }
 
     const renderService = ({ item }) => (

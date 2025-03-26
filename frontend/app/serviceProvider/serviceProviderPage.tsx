@@ -13,18 +13,8 @@ export default function ServiceProviderPage ({}) {
     const parsedData = data ? JSON.parse(data) : null;
 
     const router = useRouter();
-    const [selectedDateTime, setSelectedDate] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [isCalendarVisible, setCalendarVisible] = useState(false);
-
-    const [availableTimes] = useState({
-        "Monday": "2-3 PM",
-        "Wednesday": "4-5 PM" 
-    });
-
-    const [availableDates] = useState({
-        "2025-03-10" : { price: "50 SGD" },
-        "2025-03-15": { price: "60 SGD" },
-    });
 
     const reviews = [
         { id: "1", name: "John Doe", rating: 5, comment: "Great service! Highly recommend." },
@@ -45,7 +35,7 @@ export default function ServiceProviderPage ({}) {
 
     // Booking handler - send data to backend
     const handleBook = async () => {
-        if (!selectedDateTime) {
+        if (!selectedDate) {
             Alert.alert('Error', 'Please select a date before booking.');
             return;
         }
@@ -53,8 +43,8 @@ export default function ServiceProviderPage ({}) {
         // Mock API request for booking
         const bookingData = {
             description: parsedData?.service?.category,
-            date: selectedDateTime,
-            price: availableDates[selectedDateTime]?.price,
+            date: selectedDate,
+            price: 0,
             providerId: parsedData?.provider?.id,
             userId: "user123", // Assuming you have a user ID
         };
@@ -117,7 +107,7 @@ export default function ServiceProviderPage ({}) {
                 <View>
                     <Text style={styles.sectionTitle}>Select Available Date</Text>
                     <CalendarPrice
-                        selectedDate={availableDates}
+                        selectedDate={selectedDate}
                         onDayPress={(day) => setSelectedDate(day.dateString)}
                     />
 
@@ -126,8 +116,8 @@ export default function ServiceProviderPage ({}) {
                 </View>
             )}
 
-            {selectedDateTime && availableDates[selectedDateTime] && (
-                <Text style={styles.price}>Price: {availableDates[selectedDateTime].price}</Text>
+            {selectedDate && (
+                <Text style={styles.price}>Price: {0}</Text>
             )}
 
             {/* Rating and Reviews */}
@@ -153,7 +143,7 @@ export default function ServiceProviderPage ({}) {
             </View>
 
             {/* Book Button - Submit booking */}
-            {isCalendarVisible && selectedDateTime && (
+            {isCalendarVisible && selectedDate && (
                 <Pressable style={[styles.button, styles.bookButton, {marginBottom: 50}]} onPress={handleBook}>
                     <Text style={styles.buttonText}>Confirm Booking</Text>
                 </Pressable>

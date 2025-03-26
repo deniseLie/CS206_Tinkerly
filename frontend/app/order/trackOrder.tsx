@@ -1,18 +1,22 @@
-import { StyleSheet, Platform, Pressable, View } from 'react-native';
+import { StyleSheet, Platform, Pressable, View, TextInput } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import OrderCard from '@/components/OrderCard';
 import BackButton from '@/components/BackButton';
+import OngoingProcessCard from '@/components/OngoingProcessCard';
 
 export default function OrderReceipt() {
   return (
     <ThemedView style={styles.container}>
       
-      <BackButton text="Order Receipt"/>
+      <BackButton text="Track Order"/>
 
       <View>
+
+        {/* Status Box */}
+        <OngoingProcessCard />
 
         {/* Receipt Card */}
         <OrderCard 
@@ -29,14 +33,6 @@ export default function OrderReceipt() {
             trackOrder: false
           }} 
         />
-        
-        {/* Description Card */}
-        <ThemedView style={styles.descriptionCard}>
-          <ThemedText style={styles.descriptionTitle}>Service Description</ThemedText>
-          <ThemedText style={styles.descriptionText}>
-            Customer's air-con is not cold. Requires cleaning and servicing. We performed suctioning and cleaning of the webbing to fix the issue.
-          </ThemedText>
-        </ThemedView>
       </View> 
     </ThemedView>
   );
@@ -68,6 +64,24 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     width: 40, // Same width as back button for centering title
+  },
+  statusCard: {
+    backgroundColor: '#F8F8F8',
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statusText: {
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  statusSubtext: {
+    marginTop: 4,
+    color: 'gray',
   },
   descriptionCard: {
     backgroundColor: '#fff',
