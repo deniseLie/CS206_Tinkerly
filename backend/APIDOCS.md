@@ -150,6 +150,24 @@
     }
     ```
 
+- **Get all the service providers who provide the Service Type**
+  - **URL:** `/service-providers/service-type/:type`
+  - **Example:** `service-providers/service-type/AC%20Repair`
+  - **Method:** `GET`
+  - **Response:**
+    ```json
+    {
+      "spID": 1,
+      "name": "Ah Beng AC Services",
+      "address": "Paya Lebar Drive",
+      "phoneNumber": "69696969",
+      "bankAccount": "HUATTT",
+      "rating": 5,
+      "category": "Air Con",
+      "distance": 5
+    }
+    ```
+
 - **Update a service provider by ID**
   - **URL:** `/service-providers/:id`
   - **Method:** `PUT`
@@ -343,6 +361,22 @@
       "rating": 5,
       "comments": "Great service!",
       "serviceID": 1
+    }
+    ```
+
+- **Get all the Service Reviews of a Service Provider**
+  - **URL:** `/service-reviews/service-provider/:spID`
+  - **Method:** `GET`
+  - **Response:**
+    ```json
+    {
+        "reviewID": 2,
+        "rating": 5,
+        "comments": "Great service!",
+        "serviceID": 1,
+        "Service": {
+            "typeID": 1
+        }
     }
     ```
 

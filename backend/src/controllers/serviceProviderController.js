@@ -1,5 +1,23 @@
 // controllers/serviceProviderController.js
-const { ServiceProvider } = require('../models');
+const { ServiceProvider, ServiceType } = require('../models');
+
+exports.getProvidersByServiceType = async (req, res) => {
+  try {
+    const { type } = req.params;
+
+    const providers = await ServiceProvider.findAll({
+      include: {
+        model: ServiceType,
+        where: { type },
+        attributes: [], // Exclude service type details from the response
+      },
+    });
+
+    res.json(providers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Create a new service provider
 exports.createServiceProvider = async (req, res) => {

@@ -1,5 +1,27 @@
 // controllers/serviceReviewController.js
-const { ServiceReview } = require('../models');
+const { ServiceReview, Service, ServiceType } = require('../models');
+
+exports.getReviewsByServiceProvider = async (req, res) => {
+  try {
+    const { spID } = req.params;
+
+    const reviews = await ServiceReview.findAll({
+      include: {
+        model: Service,
+        include: {
+          model: ServiceType,
+          where: { spID },
+          attributes: [], // Exclude service type details from the response
+        },
+        attributes: ['typeID'], // Fetch typeID from Service
+      },
+    });
+
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Create a new service review
 exports.createServiceReview = async (req, res) => {
