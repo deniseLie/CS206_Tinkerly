@@ -5,15 +5,14 @@ import { FontAwesome } from "@expo/vector-icons";
 export default function ServiceProviderCard({ service, serviceOnPress }) {
   return (
     <View style={styles.cardContainer}>
-        {/* <Image source={{ src: imageUri }} style={styles.profileImage} /> */}
-
+      <Image source={require('frontend/assets/images/ahbeng.png')} style={styles.profileImage} />
         {/* Info */}
         <View style={styles.infoContainer}>
             <Text style={styles.nameText}>{service.name}</Text>
-            <Text style={styles.servicesText}>{service.services}</Text>
+            <Text style={styles.servicesText}>{service.category}</Text>
             <View style={styles.locationContainer}>
             <FontAwesome name="map-marker" size={14} color="gray" />
-            <Text style={styles.distanceText}>{service.distance}</Text>
+            <Text style={styles.distanceText}>{service.distance} km</Text>
             </View>
         </View>
 
@@ -25,9 +24,12 @@ export default function ServiceProviderCard({ service, serviceOnPress }) {
         </View>
 
         {/* Price */}
-        <Pressable style={styles.priceButton} onPress={serviceOnPress}>
-            <Text style={styles.priceText}>{service.price} SGD</Text>
-        </Pressable>
+        <View style={styles.priceContainer}>
+          <Text>Starting From</Text>
+          <Pressable style={styles.priceButton} onPress={serviceOnPress}>
+              <Text style={styles.priceText}>{service.price} SGD</Text>
+          </Pressable>
+        </View>
     </View>
   );
 }
@@ -49,7 +51,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 5,
     marginRight: 10,
   },
   infoContainer: {
@@ -92,10 +94,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "gray",
   },
-  priceButton: {
+  priceContainer:{ 
     position: 'absolute',
     right: 10,
     bottom: 10,
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center'
+  },
+  priceButton: {
     flexShrink: 0,
     backgroundColor: "#41A48F",
     borderRadius: 8,

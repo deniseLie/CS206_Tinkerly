@@ -11,7 +11,7 @@ export default function ServiceProviderPage ({}) {
 
     const { data } = useLocalSearchParams();
     const parsedData = data ? JSON.parse(data) : null;
-
+   
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [isCalendarVisible, setCalendarVisible] = useState(false);
@@ -79,13 +79,13 @@ export default function ServiceProviderPage ({}) {
 
             {/* Service Provider Info */}
             <View style={styles.card}>
-                <Text style={styles.name}>{parsedData?.provider?.name || "Ah Beng"}</Text>
-                <Text style={styles.service}>{parsedData?.service?.category || "Aircon Service"}</Text>
+                <Text style={styles.name}>{parsedData?.provider?.name || parsedData?.name || "Ah Beng"}</Text>
+                <Text style={styles.service}>{parsedData?.service?.category || parsedData?.category || "Aircon Service"}</Text>
                 <View style={styles.locationContainer}>
                     <FontAwesome name="map-marker" size={18} color="gray" />
-                    <Text style={styles.location}>{parsedData?.provider?.distance}</Text>
+                    <Text style={styles.location}>{parsedData?.provider?.distance || parsedData?.distance} km</Text>
                 </View>
-                <Text style={styles.price}>Starting from {parsedData?.provider?.price || 50} SGD</Text>
+                <Text style={styles.price}>Starting from {parsedData?.provider?.price || parsedData?.price ||50} SGD</Text>
             </View>
 
             {/* Buttons */}

@@ -16,14 +16,14 @@ export default function Browse() {
   const [activeFilter, setActiveFilter] = useState<string>("Recommended");
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
 
-  const allServices = [
-    { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
-    { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
-    { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
-    { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
-  ];
+  // const allServices = [
+  //   { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
+  //   { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
+  //   { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
+  //   { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
+  // ];
 
-  const filteredServices = allServices
+  const filteredServices = serviceProvider
     .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
     .sort((a, b) => {
       if (activeFilter === "Recommended") return b.rating - a.rating;
@@ -54,7 +54,7 @@ export default function Browse() {
       <LocationSearchBar />
       
       <Text style={styles.headerText}>All Services</Text>
-      <Text style={styles.subHeadertext}>6842 Service Providers</Text>
+      <Text style={styles.subHeadertext}>{serviceProvider?.length} Service Provider(s)</Text>
 
       {/* Search Service provider */}
       <View style={styles.searchFilterProviderContainer}>
@@ -87,7 +87,7 @@ export default function Browse() {
             key={index}
             href={{
               pathname: `/serviceProvider/serviceProviderPage`,
-              params: {service: JSON.stringify(service)}
+              params: {data: JSON.stringify(service)}
             }}
             style={{ textDecorationLine: 'none' }}
           >
