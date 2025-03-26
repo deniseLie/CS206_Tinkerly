@@ -12,6 +12,9 @@ router.get('/', serviceReviewController.getServiceReviews);
 // Get a single service review by ID
 router.get('/:id', serviceReviewController.getServiceReviewById);
 
+// Get all the Service Reviews of a Service Provider
+router.get('/service-provider/:spID', serviceReviewController.getReviewsByServiceProvider);
+
 // Update a service review by ID
 router.put('/:id', serviceReviewController.updateServiceReview);
 
