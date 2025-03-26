@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import ReviewOrder from '../review/revieworder';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LocationSearchBar, SearchBar } from '@/components/SearchBar';
 import { ScrollView } from 'react-native-gesture-handler';
 import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
-import { Link, useLocalSearchParams } from 'expo-router';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from '@/components/BackButton';
 import { fetchServiceProviderByServiceType, fetchServiceProviders } from '@/services/serviceProviderApi';
 
 export default function ServiceProviderBrowse() {
+
+  const router = useRouter();
 
   // Params
   const { data = null } = useLocalSearchParams();
@@ -51,6 +54,46 @@ export default function ServiceProviderBrowse() {
       if (activeFilter === "Highest Rated") return b.rating - a.rating;
       return 0;
     });
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeFilter, setActiveFilter] = useState<string>("Recommended");
+  const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
+
+  // All Service
+  const allServices = [
+      { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
+      { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
+      { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
+      { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
+  ];
+
+  // Filter service
+  const filteredServices = allServices
+      .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      .sort((a, b) => {
+          if (activeFilter === "Recommended") return b.rating - a.rating;
+          if (activeFilter === "Nearby") return parseFloat(a.distance) - parseFloat(b.distance);
+          if (activeFilter === "Highest Rated") return b.rating - a.rating;
+          return 0;
+      });
+  
+  // Book Service
+  const bookService = (service) => {
+    console.log(service);
+
+    if (parsedData?.selectedDate && parsedData?.selectedTime) {
+      router.push({
+        pathname: "../review/revieworder",
+        params: {
+          data: JSON.stringify({
+            selectedDate: parsedData.selectedDate,
+            selectedTime: parsedData.selectedTime,
+            selectedService: service,
+            ...parsedData,
+          })
+        }
+      });
+    }
+  }
 
   return (
     <View style={styles.container}>
