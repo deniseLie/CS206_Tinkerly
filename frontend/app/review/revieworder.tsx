@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 type ServiceItem = {
@@ -325,6 +325,63 @@ export default function ReviewOrder() {
         "Customer's air-con is not cold. Requires cleaning and servicing. We performed suctioning and cleaning of the webbing to fix the issue.";
     const walletBalance = 100;
     const [extraRequests, setExtraRequests] = useState('');
+    const { data = null } = useLocalSearchParams();
+    const parsedData = data ? JSON.parse(data) : null;
+
+    const selectedService = parsedData?.selectedService;
+    const selectedDate = parsedData?.selectedDate;
+    const selectedTime = parsedData?.selectedTime;
+
+    const router = useRouter();
+    
+    console.log('REVIEW ORDER ', parsedData);
+
+    const orderData = {
+        extraRequirement: extraRequests,
+        description: selectedService?.description,
+        finalPrice: selectedService?.price,
+        date: selectedDate,
+        time: selectedTime,
+        customerID: 1, // Replace with actual customer ID
+        typeID: selectedService?.typeID, // Replace with actual type ID
+      };
+    
+    // Function to handle confirm booking
+    const handleConfirmBooking = async () => {
+        try {
+            router.push('../order/orderreceipt');
+            const response = await fetch('https://cs206-tinkerly.onrender.com/services', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData),
+            });
+
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('Booking confirmed:', data);
+            // Navigate to next screen or display confirmation message
+        } catch (error) {
+            console.error('Error confirming booking:', error);
+            // Handle error, e.g., display error message
+        }
+    // try {
+    //     // Send data to API
+    //     const response = await axios.post('https://https://cs206-tinkerly.onrender.com/bookings', orderData);
+    //     console.log('Booking confirmed:', response.data);
+    //     // Navigate to next screen or display confirmation message
+    //     router.push('/orderreceipt');
+    // } catch (error) {
+    //     console.error('Error confirming booking:', error);
+    //     // Handle error, e.g., display error message
+    // }
+    };
+
+    console.log('REVIEW ORDER ', parsedData);
 
     return (
         <ThemedView style={styles.container}>
@@ -391,7 +448,7 @@ export default function ReviewOrder() {
                     <View style={styles.editButtonContainer}>
                         <Pressable
                             style={styles.editButton}
-                            onPress={() => router.push('/payment')}
+                            onPress={() => router.push('../order/payment')}
                         >
                             <ThemedText style={styles.editButtonText}>Edit</ThemedText>
                         </Pressable>
@@ -401,7 +458,7 @@ export default function ReviewOrder() {
                 {/* Confirm Booking Button */}
                 <Pressable
                     style={styles.confirmBookingButton}
-                    onPress={() => router.push('/orderreceipt')}
+                    onPress={handleConfirmBooking}
                 >
                     <ThemedText style={styles.confirmBookingText}>Confirm Booking</ThemedText>
                 </Pressable>
