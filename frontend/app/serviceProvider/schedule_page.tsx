@@ -3,11 +3,16 @@ import CalendarPrice from "@/components/calendarPrice";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const BookingScreen = () => {
   
   const router = useRouter();
+
+  // Params
+  const { data = null } = useLocalSearchParams();
+  const parsedData = data ? JSON.parse(data) : null;
+
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -37,13 +42,15 @@ const BookingScreen = () => {
 
   // Function: Find service provider
   const findServiceProvider = () => {
+    console.log(parsedData)
     if (selectedDate && selectedTime) {
       router.push({
         pathname: "/serviceProvider/serviceProviderBrowse",
         params: {
           data: JSON.stringify({
             selectedDate: selectedDate,
-            selectedTime: selectedTime
+            selectedTime: selectedTime,
+            ...parsedData,
           })
         }
       })
@@ -55,6 +62,7 @@ const BookingScreen = () => {
 
       <BackButton text="Schedule" noMargin={true}/>
 
+      <View style={{ marginTop : 20}} />
       <CalendarPrice
         selectedDate={selectedDate}
         onDayPress={onDayPress}

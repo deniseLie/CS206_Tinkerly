@@ -13,6 +13,7 @@ export default function ServiceProviderBrowse() {
   // Params
   const { data = null } = useLocalSearchParams();
   const parsedData = data ? JSON.parse(data) : null;
+  // console.log('BROWSE ', parsedData)
 
   // State
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -50,7 +51,7 @@ export default function ServiceProviderBrowse() {
 
         <LocationSearchBar />
         
-        <Text style={styles.headerText}>{parsedData?.service ? parsedData.service : "All Services"}</Text>
+        <Text style={styles.headerText}>{parsedData?.service?.category ? parsedData.service.category : "All Services"}</Text>
         {/* Selected Date */}
         {parsedData?.selectedDate && parsedData?.selectedTime && (
             <Text style={styles.selectedInfo}>Selected Date: {parsedData.selectedDate}, Time: {parsedData.selectedTime}</Text>
@@ -58,8 +59,6 @@ export default function ServiceProviderBrowse() {
         
         <Text style={styles.subHeadertext}>6842 Service Providers</Text>
         
-        
-
         {/* Search Service provider */}
         <View style={styles.searchFilterProviderContainer}>
             <FontAwesome size={30} name="filter" color={"gray"}/>
@@ -91,7 +90,12 @@ export default function ServiceProviderBrowse() {
                 key={index}
                 href={{
                 pathname: `/serviceProvider/serviceProviderPage`,
-                params: {service: JSON.stringify(service), selectedDateTime: true}
+                params: {
+                  data: JSON.stringify({
+                    provider: service,
+                    ...parsedData
+                  })
+                }
                 }}
                 style={{ textDecorationLine: 'none' }}
             >

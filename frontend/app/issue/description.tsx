@@ -20,12 +20,11 @@ const Description = () => {
     ];
 
     const onPressService = (item) => {
-        console.log(item);
         router.push({
             pathname: "/issue/describeissue",
             params: {
                 data: JSON.stringify({
-                    service: JSON.stringify(item),
+                    service: item,
                 })
             }
             })
