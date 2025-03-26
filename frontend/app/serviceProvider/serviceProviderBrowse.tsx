@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+import ReviewOrder from '../review/revieworder';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LocationSearchBar, SearchBar } from '@/components/SearchBar';
 import { ScrollView } from 'react-native-gesture-handler';
 import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
-import { Link, useLocalSearchParams } from 'expo-router';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from '@/components/BackButton';
 
 export default function ServiceProviderBrowse() {
+
+  const router = useRouter();
 
   // Params
   const { data = null } = useLocalSearchParams();
@@ -40,6 +43,20 @@ export default function ServiceProviderBrowse() {
   // Book Service
   const bookService = (service) => {
     console.log(service);
+
+    if (parsedData?.selectedDate && parsedData?.selectedTime) {
+      router.push({
+        pathname: "../review/revieworder",
+        params: {
+          data: JSON.stringify({
+            selectedDate: parsedData.selectedDate,
+            selectedTime: parsedData.selectedTime,
+            selectedService: service,
+            ...parsedData,
+          })
+        }
+      });
+    }
   }
 
   return (
