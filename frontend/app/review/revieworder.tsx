@@ -12,6 +12,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import ButtonFilter from '../../components/buttonFilter';
+
 
 type ServiceItem = {
     serviceName: string;
@@ -332,6 +334,10 @@ export default function ReviewOrder() {
     const selectedService = parsedData?.selectedService;
     const selectedDate = parsedData?.selectedDate;
     const selectedTime = parsedData?.selectedTime;
+
+    const router = useRouter();
+    
+    console.log('REVIEW ORDER ', parsedData);
 
     const orderData = {
         extraRequirement: extraRequests,
