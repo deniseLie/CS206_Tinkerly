@@ -60,7 +60,7 @@ const BookingScreen = () => {
   return (
     <View style={styles.container} keyboardShouldPersistTaps="handled">
 
-      <BackButton text="Schedule" noMargin={true}/>
+      <BackButton text="Schedule" noMargin={true} isHomeButton={true}/>
 
       <View style={{ marginTop : 20}} />
       <CalendarPrice

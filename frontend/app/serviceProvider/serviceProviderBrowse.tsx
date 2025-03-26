@@ -22,21 +22,24 @@ export default function ServiceProviderBrowse() {
   const [loading, setLoading] = useState(true);
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"];
 
-  useEffect(() => {
-    const getServiceProviders = async () => {
+  // use effect
+    useEffect(() => {
+      loadServiceProvider();
+    }, [])
+  
+    // function 
+    const loadServiceProvider = async () => {
       try {
-        const providers = await fetchServiceProviders();
-        console.log("GET PROVIDERS ", providers);
-        setServiceProviders(providers);
-      } catch (error) {
-        console.error("Failed to fetch service providers", error);
-      } finally {
+        const data = await fetchServiceProviders();
+        console.log('Fetch service provider', data);
+        setServiceProviders(data);
+      } catch (e) {
+        console.error('Error fetching service provider', e);
+      } finally { 
         setLoading(false);
       }
-    };
-    getServiceProviders();
-  }, []);
-
+    }
+    
   // Filter service providers
   const filteredServices = serviceProviders
     .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -49,7 +52,7 @@ export default function ServiceProviderBrowse() {
 
   return (
     <View style={styles.container}>
-      <BackButton text="Reselect Date/time" />
+      <BackButton text="Reselect Date/time" isHomeButton={true}/>
       <LocationSearchBar />
       <Text style={styles.headerText}>{parsedData?.service?.category || "All Services"}</Text>
       {parsedData?.selectedDate && parsedData?.selectedTime && (
@@ -68,6 +71,7 @@ export default function ServiceProviderBrowse() {
           <ButtonFilter key={index} buttonText={option} onPress={() => setActiveFilter(option)} active={activeFilter === option} />
         ))}
       </ScrollView>
+
       {loading ? (
         <ActivityIndicator size="large" color="gray" />
       ) : (

@@ -56,7 +56,7 @@ const DescribeIssue = () => {
         <View style={styles.container}>
             {/* Header */}
             {/* Back Button */}
-            <BackButton text={"Back"}/>
+            <BackButton text={"Back"} isHomeButton={true}/>
 
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>AC Repair</Text>
