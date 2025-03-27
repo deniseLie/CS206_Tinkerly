@@ -124,6 +124,10 @@ const Service = sequelize.define('Service', {
       key: 'typeID', // Key in the target table
     },
   },
+  ongoing: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,  // When a Service is created, ongoing is true by default
+  },
 }, {
   tableName: 'services',
   timestamps: false,
