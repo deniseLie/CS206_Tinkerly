@@ -1,8 +1,8 @@
 // controllers/serviceController.js
 const express = require('express');
-const { ServiceProvider, Service } = require('../models');
+const { ServiceProvider, Service, ServiceType } = require('../models');
 const { Op } = require('sequelize');
-
+const Sequelize = require('sequelize'); // Added for Sequelize.col
 
 exports.matchServiceProviders = async (req, res) => {
   try {
@@ -114,17 +114,56 @@ exports.createService = async (req, res) => {
 // Get all services
 exports.getServices = async (req, res) => {
   try {
-    const services = await Service.findAll();
+    const services = await Service.findAll({
+      attributes: {
+        include: [
+          [Sequelize.col('ServiceType.ServiceProvider.name'), 'providerName'],
+          [Sequelize.col('ServiceType.ServiceProvider.category'), 'providerCategory']
+        ]
+      },
+      include: [
+        {
+          model: ServiceType,
+          attributes: [], // Do not include ServiceType attributes in the output
+          include: [
+            {
+              model: ServiceProvider,
+              attributes: [] // Do not include full ServiceProvider object in the output
+            }
+          ]
+        }
+      ],
+      order: [['serviceID', 'ASC']]  // This ensures the services are returned in ascending order by serviceID.
+    });
     res.json(services);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get a single service by ID
+// Get a single service by ID with flattened ServiceProvider details
 exports.getServiceById = async (req, res) => {
   try {
-    const service = await Service.findByPk(req.params.id);
+    const service = await Service.findByPk(req.params.id, {
+      attributes: {
+        include: [
+          [Sequelize.col('ServiceType.ServiceProvider.name'), 'providerName'],
+          [Sequelize.col('ServiceType.ServiceProvider.category'), 'providerCategory']
+        ]
+      },
+      include: [
+        {
+          model: ServiceType,
+          attributes: [], // Exclude ServiceType details
+          include: [
+            {
+              model: ServiceProvider,
+              attributes: [] // Exclude full ServiceProvider object
+            }
+          ]
+        }
+      ]
+    });
     if (!service) {
       return res.status(404).json({ message: 'Service not found' });
     }
