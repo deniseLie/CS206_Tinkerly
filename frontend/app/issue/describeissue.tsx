@@ -29,7 +29,7 @@ const DescribeIssue = () => {
                     ...parsedData
                 })
             }
-            })
+        })
     }
 
     const [description, setDescription] = useState('');

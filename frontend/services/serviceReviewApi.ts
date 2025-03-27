@@ -1,6 +1,13 @@
 import api from './api';
 import { ServiceReview } from '../types/serviceReview';
 
+
+// create a service review
+export const createServiceReview = async (body) => {
+    const response = await api.post('/service-reviews', body);
+    return response.data;
+};
+
 // Fetch all service reviews
 export const fetchServiceReviews = async (): Promise<ServiceReview[]> => {
     const response = await api.get('/service-reviews');

@@ -25,6 +25,7 @@ export interface ServiceReview {
     reviewID: number;
     rating: number;
     comments: string;
+    serviceID: number;
 }
 
 export interface Customer {

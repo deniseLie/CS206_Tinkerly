@@ -38,9 +38,10 @@ export default function RootLayout() {
           <Stack.Screen name="serviceProvider/schedule_page" options={{ headerShown: false }} />
           <Stack.Screen name="issue/description" options={{ headerShown: false }} />
           <Stack.Screen name="issue/describeissue" options={{ headerShown: false }} />
-          <Stack.Screen name="order/orderReceipt" options={{ headerShown: false }} />
+          <Stack.Screen name="order/trackOrder" options={{ headerShown: false }} />
           <Stack.Screen name="order/payment" options={{ headerShown: false }} />
           <Stack.Screen name="review/reviewOrder" options={{ headerShown: false }} />
+          <Stack.Screen name="review/leaveReview" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

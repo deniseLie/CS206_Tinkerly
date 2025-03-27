@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 export default function ShortOrderCard({ order }) {
   const trackOrderPressed = (service) => {
     router.push({
-      pathname: "/order/orderReceipt",
+      pathname: "/order/trackOrder",
       params: {
         data: JSON.stringify({
           service: service,
@@ -46,8 +46,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 20,
-    marginBottom: 20,
-    marginTop: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
