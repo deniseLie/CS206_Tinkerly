@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, TextInput, Alert, ScrollView, Modal, Button } from "react-native";
+import { View, Text, StyleSheet, Pressable, TextInput, Alert, ScrollView, Modal, Button, Image } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import BackButton from "@/components/BackButton";
@@ -19,15 +19,20 @@ export default function ReviewPage() {
 
     const [loading, setLoading] = useState<boolean>(false); // for loading state
 
+    const subtotal = parsedService?.service?.finalPrice || parsedService?.finalPrice + 5 + 5;
+    const tinkerlyFee = subtotal * 0.05;
+    const grandTotal = subtotal + tinkerlyFee;
+
     // Handle Rating
     const handleRating = (index: number) => setRating(index);
+
+    console.log('sericese', parsedService)
 
     // Handle Submit
     const handleSubmit = async () => {
         if (rating === 0) return Alert.alert("Error", "Please provide a rating.");
 
         setLoading(true);
-        console.log('sericese', parsedService)
         try {
             const reviewData = {
                 rating,
@@ -89,9 +94,15 @@ export default function ReviewPage() {
 
             {/* Service Details */}
             <View style={styles.card}>
-                <Text style={styles.name}>{parsedService?.name || "Service Provider"}</Text>
-                <Text style={styles.service}>{parsedService?.category || "Service Type"}</Text>
-                <Text style={styles.price}>Price: {parsedService?.price || 50} SGD</Text>
+                <Image source={require('frontend/assets/images/ahbeng.png')} style={styles.profileImage} />
+                <View>
+                    <Text style={styles.name}>{parsedService?.service?.providerName || "Service Provider"}</Text>
+                    <Text style={styles.service}>{parsedService?.service?.providerCategory || "Service Type"}</Text>
+                    <Text style={styles.service}>{parsedService?.service?.date} {parsedService?.service?.time}</Text>
+                    <Text style={styles.description}>{parsedService?.service?.description}</Text>
+                    <Text style={styles.description}>{parsedService?.service?.extraRequirement}</Text>
+                    <Text style={styles.price}>Price: {grandTotal} SGD</Text>
+                </View>
             </View>
 
             {/* Rating Section */}
@@ -176,6 +187,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
         marginVertical: 15,
+        flexDirection: 'row'
     },
     name: {
         fontSize: 22,
@@ -187,6 +199,11 @@ const styles = StyleSheet.create({
         color: "gray",
         marginBottom: 5,
     },
+    description: {
+        fontSize: 16,
+        color: "black",
+        marginBottom: 5,
+    },  
     price: {
         fontSize: 18,
         fontWeight: "600",
@@ -266,5 +283,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
     },
+    profileImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 5,
+        marginRight: 10,
+      },
 });
 

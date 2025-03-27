@@ -46,6 +46,7 @@ const Description = () => {
         <View style={styles.container}>
             {/* Back Button */}
             <BackButton text={"Back"} />
+            
             {/* Search Bar */}
             <View style={styles.header}>
                 <TextInput

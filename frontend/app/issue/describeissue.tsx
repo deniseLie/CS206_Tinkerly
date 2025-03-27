@@ -86,9 +86,6 @@ const DescribeIssue = () => {
                     onChangeText={setDescription}
                 ></TextInput>
 
-                {/* Service Date & Time */}
-                <Text style={styles.sectionTitle}>Service date & Time</Text>
-
 
                 {/* Confirm Address */}
                 <Text style={styles.sectionTitle}>Confirm Address</Text>

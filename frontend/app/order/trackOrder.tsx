@@ -42,7 +42,7 @@ export default function trackOrder() {
   return (
     <ThemedView style={styles.container}>
       
-      <BackButton text="Track Order"/>
+      <BackButton text="Track Order" noMargin={true}/>
 
       <View>
         

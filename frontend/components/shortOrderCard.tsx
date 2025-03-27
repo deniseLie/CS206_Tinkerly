@@ -1,10 +1,10 @@
 import React from 'react';
-import { Platform, StyleSheet, Pressable } from "react-native";
-import { ThemedView } from "./ThemedView"; // Ensure this exists in your project
+import { Platform, StyleSheet, Pressable, Image, View } from "react-native";
 import { ThemedText } from "./ThemedText"; // Ensure this exists in your project
 import { router } from 'expo-router';
 
 export default function ShortOrderCard({ order }) {
+
   const trackOrderPressed = (service) => {
     router.push({
       pathname: "/order/trackOrder",
@@ -30,13 +30,15 @@ export default function ShortOrderCard({ order }) {
         style={styles.card}
         onPress={() => trackOrderPressed(order.service)}
     >
-      <ThemedText style={styles.companyName}>{order.companyName} ({grandTotal || 50} SGD)</ThemedText>
-      
-      {order?.service?.description && (
-        <ThemedText>{order.service?.description}</ThemedText>
-      )}
-      
-      <ThemedText style={styles.status}>Ongoing</ThemedText>
+      <Image source={require('frontend/assets/images/ahbeng.png')} style={styles.profileImage} />
+      <View>
+        <ThemedText style={styles.companyName}>{order?.service?.providerName} ({grandTotal || 50} SGD)</ThemedText>
+        <ThemedText>{order.service?.providerCategory}</ThemedText>
+        <ThemedText>{order.service?.time}</ThemedText>
+        
+        <ThemedText style={styles.status}>Ongoing</ThemedText>
+        
+      </View>
     </Pressable>
   );
 }
@@ -51,11 +53,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: Platform.OS === 'android' ? 3 : undefined,
+    flexDirection: 'row'
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    marginRight: 10,
   },
   companyName: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontWeight: 'bold'
   },
   buttonContainer: {
     marginTop: 20,

@@ -94,13 +94,13 @@ const HomeScreen = () => {
                 numColumns={4}
                 contentContainerStyle={styles.servicesContainer}
             />
-            <TouchableOpacity style={styles.viewAllButton}>
+            {/* <TouchableOpacity style={styles.viewAllButton}>
                 <Text style={styles.viewAllText}>View All Services   </Text>
                 <Image
                     source={require('../../assets/icons/viewall.png')} // Replace with your actual icon
                     style={styles.viewAllIcon}
                 />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Sponsored Section */}
             <Text style={styles.sectionTitle}>Sponsored</Text>

@@ -63,7 +63,7 @@ export default function Payment() {
         </ThemedView>
         <Pressable
           style={[styles.selectButton, isSelected && styles.selectedButton]}
-          onPress={() => setSelectedMethod(method.id)}
+          // onPress={() => setSelectedMethod(method.id)}
         >
           <ThemedText style={styles.selectButtonText}>
               {isSelected ? 'Selected' : 'Select'}

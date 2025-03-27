@@ -116,6 +116,20 @@ export default function ServiceProviderPage ({}) {
                     {selectedTime && " SGD"}
                 </Text>
             </View>
+
+            {/* Show Calendar only when "Book Provider" button is pressed */}
+            {isCalendarVisible && (
+                <View>
+                    <Text style={styles.sectionTitle}>Select Available Date</Text>
+                    <CalendarPrice
+                        selectedDate={selectedDate}
+                        onDayPress={(day) => setSelectedDate(day.dateString)}
+                    />
+
+                    {/* Divider */}
+                    <Divider customStyle={styles.divider} />
+                </View>
+            )}
             
             {/* Select Time */}
             <View style={{ marginBottom: 20 }}>
@@ -147,6 +161,16 @@ export default function ServiceProviderPage ({}) {
                     <Text style={styles.buttonText}>Share</Text>
                 </Pressable>
             </View>
+
+            {/* Divider */}
+            <Divider customStyle={styles.divider} />
+
+            {/* Book Button - Submit booking */}
+            {isCalendarVisible && selectedDate && (
+                <Pressable style={[styles.button, styles.bookButton]} onPress={handleBook}>
+                    <Text style={styles.buttonText}>Confirm Booking</Text>
+                </Pressable>
+            )}
             
             {/* Divider */}
             <Divider customStyle={styles.divider} />
@@ -181,34 +205,6 @@ export default function ServiceProviderPage ({}) {
                     </View>
                 ))}
             </View>
-
-            {/* Divider */}
-            <Divider customStyle={styles.divider} />
-
-            {/* Show Calendar only when "Book Provider" button is pressed */}
-            {isCalendarVisible && (
-                <View>
-                    <Text style={styles.sectionTitle}>Select Available Date</Text>
-                    <CalendarPrice
-                        selectedDate={selectedDate}
-                        onDayPress={(day) => setSelectedDate(day.dateString)}
-                    />
-
-                    {/* Divider */}
-                    <Divider customStyle={styles.divider} />
-                </View>
-            )}
-
-            {selectedDate && (
-                <Text style={styles.price}>Price: {45} SGD</Text>
-            )}
-
-            {/* Book Button - Submit booking */}
-            {isCalendarVisible && selectedDate && (
-                <Pressable style={[styles.button, styles.bookButton, {marginBottom: 50}]} onPress={handleBook}>
-                    <Text style={styles.buttonText}>Confirm Booking</Text>
-                </Pressable>
-            )}
         </ScrollView>
     );
 }
@@ -271,6 +267,7 @@ const styles = StyleSheet.create({
     },
     ratingContainer: {
         marginVertical: 5,
+        marginBottom: 50
     },
     divider: {
         marginVertical: 20,

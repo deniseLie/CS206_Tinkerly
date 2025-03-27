@@ -81,7 +81,8 @@ export default function ReviewOrder() {
     const handleConfirmBooking = async () => {
         try {
             console.log(orderData);
-            await createService(orderData);
+            const res = await createService(orderData);
+            console.log('handleConfirmBooking', res);
             setModalVisible(false);
             router.push('/(tabs)/order');
         } catch (error) {
