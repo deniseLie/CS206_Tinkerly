@@ -26,7 +26,15 @@ exports.getReviewsByServiceProvider = async (req, res) => {
 // Create a new service review
 exports.createServiceReview = async (req, res) => {
   try {
+    // Create the new service review
     const review = await ServiceReview.create(req.body);
+
+    // After the review is submitted, update the associated Service to set ongoing to false.
+    await Service.update(
+      { ongoing: false },
+      { where: { serviceID: review.serviceID } }
+    );
+
     res.status(201).json(review);
   } catch (error) {
     res.status(500).json({ error: error.message });
