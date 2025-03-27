@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/tinkerly_logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.Tinkerly"
     },
     "web": {
       "bundler": "metro",

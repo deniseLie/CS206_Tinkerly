@@ -34,7 +34,7 @@ export default function ServiceProviderBrowse() {
     const loadServiceProvider = async () => {
       try {
         const data = await fetchServiceProviderByServiceType("AC%20Repair");
-        console.log('Fetch service provider', data);
+        // console.log('Fetch service provider', data);
         setServiceProviders(data);
       } catch (e) {
         console.error('Error fetching service provider', e);

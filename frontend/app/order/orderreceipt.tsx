@@ -1,38 +1,47 @@
 import { StyleSheet, Platform, Pressable, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import OrderCard from '@/components/OrderCard';
 import BackButton from '@/components/BackButton';
 import DescriptionCard from '@/components/descriptionCard';
+import OngoingProcessCard from '@/components/OngoingProcessCard';
+import ExtraReq from '@/components/ExtraReq';
 
 export default function OrderReceipt() {
+    const { data } = useLocalSearchParams();
+    const parsedData = data ? JSON.parse(data) : null;
+    
   return (
     <ThemedView style={styles.container}>
       
-      <BackButton text="Order Receipt"/>
+      <BackButton text="Track Order"/>
 
       <View>
+        
+        {/* Status Box */}
+        <OngoingProcessCard />
 
         {/* Receipt Card */}
         <OrderCard 
           order={{
-            companyName: "Example Company",
-            services: [
-              { name: "Aircon Cleaning", price: 80 },
-              { name: "Fan Servicing", price: 40 },
-            ],
-            travellingCost: 10,
-            consultationFee: 20,
-            startTime: "2:30 PM",
-            endTime: "4:30 PM",
+            companyName: 'Service Provider', // Adjust based on your API response
+            service: parsedData?.service,
+            travellingCost: 5.00, // Hardcoded
+            consultationFee: 5.00, // Hardcoded
+            endTime: 'N/A', // Hardcoded
             trackOrder: false
-          }} 
+          }}
         />
         
+        {/* Extra req */}
+          {parsedData?.service?.extraRequirement && (
+            <ExtraReq description={parsedData?.service?.extraRequirement}/>
+          )}
+
         {/* Description Card */}
-        <DescriptionCard />
+        <DescriptionCard description={parsedData?.service?.description || "None"}/>
       </View> 
     </ThemedView>
   );

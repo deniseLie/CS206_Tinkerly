@@ -4,15 +4,18 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import moment from "moment";
 
 const BookingScreen = () => {
   
   const router = useRouter();
 
+  const today = moment().format("YYYY-MM-DD");
+
   // Params
   const { data = null } = useLocalSearchParams();
   const parsedData = data ? JSON.parse(data) : null;
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(today);
   
 
   // Set the selected date
@@ -43,7 +46,7 @@ const BookingScreen = () => {
 
       <View style={{ marginTop : 20}} />
       <CalendarPrice
-        selectedDate={selectedDate}
+        selectedDate={selectedDate || today}
         onDayPress={onDayPress}
       />
 

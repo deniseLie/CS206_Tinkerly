@@ -20,6 +20,11 @@ export default function ServiceProviderPage ({}) {
     const [isCalendarVisible, setCalendarVisible] = useState(false);
     const [reviews, setReviews] = useState([]);
 
+    
+    const price = parsedData?.provider?.price || 
+            (selectedTime && getPrice(parseInt(selectedTime.slice(0, 2), 10)))|| 
+            parsedData?.service?.price;
+
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState(
         Array.from({ length: 24 * 2 }, (_, i) => {
@@ -31,8 +36,10 @@ export default function ServiceProviderPage ({}) {
             if ((hour >= 0 && hour < 6) || (hour >= 14 && hour < 16)) {
                 return null; // Filter out these times
             }
+            
+            let price = getPrice(hour);
     
-            return { label: `${time} - $45`, value: time };
+            return { label: `${time} - $${price}`, value: time };
         }).filter(Boolean) // Remove null values
     );
 
@@ -105,7 +112,8 @@ export default function ServiceProviderPage ({}) {
                     <Text style={styles.location}>{parsedData?.provider?.distance || parsedData?.distance} km</Text>
                 </View>
                 <Text style={styles.price}>
-                    {parsedData?.selectedTime ? 'Price' : 'Starting from'} {parsedData?.provider?.price || parsedData?.price ||50} SGD
+                    {selectedTime ? 'Price' : "Ranging"} : {price} 
+                    {selectedTime && " SGD"}
                 </Text>
             </View>
             
@@ -203,6 +211,26 @@ export default function ServiceProviderPage ({}) {
             )}
         </ScrollView>
     );
+}
+
+const getPrice = (hour) => {
+    let price = 45; // Default price
+
+    // Adjust price based on time
+    if (hour >= 6 && hour < 9) {
+        price = 30; // Morning (6 AM - 9 AM) is cheaper
+    } else if (hour >= 9 && hour < 12) {
+        price = 45; // Regular price (9 AM - 12 PM)
+    } else if (hour >= 12 && hour < 14) {
+        price = 50; // Midday (12 PM - 2 PM) is slightly more expensive
+    } else if (hour >= 16 && hour < 18) {
+        price = 55; // Late afternoon (4 PM - 6 PM) is more expensive
+    } else if (hour >= 18 && hour < 21) {
+        price = 60; // Evening (6 PM - 9 PM) is even more expensive
+    } else if (hour >= 21) {
+        price = 40; // Late night (9 PM onwards) is cheaper again
+    }
+    return price;
 }
 
 const styles = StyleSheet.create({

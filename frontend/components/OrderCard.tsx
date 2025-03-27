@@ -2,88 +2,70 @@ import React from 'react';
 import { StyleSheet, Platform, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { router } from 'expo-router';
+
+// Define the structure of the service object
+type Service = {
+  customerID: number;
+  date: string;
+  description: string | null;
+  extraRequirement: string;
+  finalPrice: number;
+  serviceID: number;
+  time: string;
+  typeID: number | null;
+};
 
 type OrderProps = {
   companyName: string;
-  services: Array<{
-    name: string;
-    price: number;
-  }>;
+  service: Service;
   travellingCost: number;
   consultationFee: number;
-  startTime: string;
-  endTime: string;
-  trackOrder: boolean
+  trackOrder: boolean;
 };
 
-const trackOrderPressed = () => {
-  router.push({
-    pathname: "/order/trackOrder",
-    params: {
-        data: JSON.stringify({
-            // service: item,
-        })
-    }
-})
-}
 
 const OrderCard = ({ order }: { order: OrderProps }) => {
-  const subtotal = order.services.reduce((sum, service) => sum + service.price, 0) 
-    + order.travellingCost + order.consultationFee;
-  const tinklerlyFee = subtotal * 0.05;
-  const grandTotal = subtotal + tinklerlyFee;
+  const subtotal = order?.service?.finalPrice || order?.finalPrice + order.travellingCost + order.consultationFee;
+  const tinkerlyFee = subtotal * 0.05;
+  const grandTotal = subtotal + tinkerlyFee;
 
   return (
     <ThemedView style={styles.card}>
       <ThemedText style={styles.companyName}>{order.companyName}</ThemedText>
-      
-      {order.services.map((service, index) => (
-        <ThemedView key={index} style={styles.row}>
-          <ThemedText>{service.name} ({order.startTime}-{order.endTime})</ThemedText>
-          <ThemedText>S${service.price.toFixed(2)}</ThemedText>
-        </ThemedView>
-      ))}
+
+      <ThemedView style={styles.row}>
+        <ThemedText>{order.service.name} ({order.service.startTime}-{order.service.endTime})</ThemedText>
+        <ThemedText>S${order?.service?.finalPrice || order?.finalPrice}</ThemedText>
+      </ThemedView>
 
       <ThemedView style={styles.row}>
         <ThemedText>Travelling Cost</ThemedText>
-        <ThemedText>S${order.travellingCost.toFixed(2)}</ThemedText>
+        <ThemedText>S${order.travellingCost}</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.row}>
         <ThemedText>Consultation Fee</ThemedText>
-        <ThemedText>S${order.consultationFee.toFixed(2)}</ThemedText>
+        <ThemedText>S${order.consultationFee}</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.divider} />
 
       <ThemedView style={styles.row}>
         <ThemedText style={styles.subtotalText}>Subtotal</ThemedText>
-        <ThemedText>S${subtotal.toFixed(2)}</ThemedText>
+        <ThemedText>S${subtotal}</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.row}>
         <ThemedText>Tinkerly Fee (5%)</ThemedText>
-        <ThemedText>S${tinklerlyFee.toFixed(2)}</ThemedText>
+        <ThemedText>S${tinkerlyFee}</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.divider} />
 
       <ThemedView style={styles.row}>
         <ThemedText style={styles.totalText}>Grand Total</ThemedText>
-        <ThemedText style={styles.totalText}>S${grandTotal.toFixed(2)}</ThemedText>
+        <ThemedText style={styles.totalText}>S${grandTotal}</ThemedText>
       </ThemedView>
-
-      {order?.trackOrder && (
-        <ThemedView style={styles.buttonContainer}>
-          <Pressable 
-            style={styles.trackOrderButton}
-            onPress={trackOrderPressed}
-          >
-            <ThemedText style={styles.trackOrderText}>Track Order</ThemedText>
-          </Pressable>
-        </ThemedView>
-      )}
     </ThemedView>
   );
 };

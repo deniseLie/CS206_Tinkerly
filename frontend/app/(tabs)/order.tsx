@@ -5,6 +5,8 @@ import { ThemedView } from '@/components/ThemedView';
 import OrderCard from '@/components/OrderCard';
 import { fetchServices } from '@/services/serviceApi';
 import { Service } from '@/types/interface';
+import ShortOrderCard from '@/components/shortOrderCard';
+import OrdersList from '@/components/OrdersList';
 
 export default function Order() {
   const [activeTab, setActiveTab] = useState<'ongoing' | 'finished'>('ongoing');
@@ -68,28 +70,7 @@ export default function Order() {
       </ThemedView>
 
       {/* Orders List */}
-      <View style={styles.ordersList}>
-        {loading ? (
-          <ActivityIndicator size="large" color="#41A48F" />
-        ) : (
-          services.map((service) => (
-            <View key={service.typeID} style={styles.tabContainer}>
-              <ThemedText style={styles.dateText}>{service.date.toString()}</ThemedText>
-              <OrderCard 
-                order={{
-                  companyName: 'Service Provider', // Adjust based on your API response
-                  services: [{ name: service.description, price: service.finalPrice }],
-                  travellingCost: 5.00,
-                  consultationFee: 5.00,
-                  startTime: service.time,
-                  endTime: 'N/A', // Adjust if you have an end time
-                  trackOrder: activeTab === 'ongoing'
-                }}
-              />
-            </View>
-          ))
-        )}
-      </View>
+      <OrdersList services={services} loading={loading} activeTab={activeTab}/>
     </ThemedView>
   );
 }
