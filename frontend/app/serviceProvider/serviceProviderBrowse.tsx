@@ -19,8 +19,8 @@ export default function ServiceProviderBrowse() {
   const parsedData = data ? JSON.parse(data) : null;
 
   // State
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState("Recommended");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeFilter, setActiveFilter] = useState<string>("Recommended");
   const [serviceProviders, setServiceProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"];
@@ -33,9 +33,7 @@ export default function ServiceProviderBrowse() {
     // function 
     const loadServiceProvider = async () => {
       try {
-
         const data = await fetchServiceProviderByServiceType("AC%20Repair");
-        // const data = await fetchServiceProviders();
         console.log('Fetch service provider', data);
         setServiceProviders(data);
       } catch (e) {
@@ -54,27 +52,6 @@ export default function ServiceProviderBrowse() {
       if (activeFilter === "Highest Rated") return b.rating - a.rating;
       return 0;
     });
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [activeFilter, setActiveFilter] = useState<string>("Recommended");
-  const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
-
-  // All Service
-  const allServices = [
-      { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
-      { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
-      { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
-      { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
-  ];
-
-  // Filter service
-  const filteredServices = allServices
-      .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
-      .sort((a, b) => {
-          if (activeFilter === "Recommended") return b.rating - a.rating;
-          if (activeFilter === "Nearby") return parseFloat(a.distance) - parseFloat(b.distance);
-          if (activeFilter === "Highest Rated") return b.rating - a.rating;
-          return 0;
-      });
   
   // Book Service
   const bookService = (service) => {
