@@ -65,7 +65,9 @@ export default function Payment() {
           style={[styles.selectButton, isSelected && styles.selectedButton]}
           onPress={() => setSelectedMethod(method.id)}
         >
-          <ThemedText style={styles.selectButtonText}>Select</ThemedText>
+          <ThemedText style={styles.selectButtonText}>
+              {isSelected ? 'Selected' : 'Select'}
+          </ThemedText>
         </Pressable>
       </ThemedView>
     );
@@ -92,7 +94,7 @@ export default function Payment() {
       {/* Add Payment Method Button */}
       <Pressable 
         style={styles.addButton}
-        onPress={() => router.push('/revieworder')}
+        onPress={() => router.back()}
       >
         <ThemedText style={styles.addButtonText}>Add payment method</ThemedText>
       </Pressable>
@@ -104,6 +106,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 20
   },
   header: {
     flexDirection: 'row',

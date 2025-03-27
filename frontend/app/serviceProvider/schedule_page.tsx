@@ -12,44 +12,23 @@ const BookingScreen = () => {
   // Params
   const { data = null } = useLocalSearchParams();
   const parsedData = data ? JSON.parse(data) : null;
-
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
-  const [items, setItems] = useState(
-    Array.from({ length: 24 * 2 }, (_, i) => {
-      const hour = Math.floor(i / 2);
-      const minute = i % 2 === 0 ? "00" : "30";
-      const time = `${hour % 12 === 0 ? 12 : hour % 12}:${minute} ${hour < 12 ? "AM" : "PM"}`;
-      return { 
-        label: `${time} - $45`, 
-        value: time 
-      };
-    })
-  );
+  
 
   // Set the selected date
   const onDayPress = (day) => {
     setSelectedDate(day.dateString);  
   };
 
-  // Data for rendering the time slots
-  const timeSlotData = items.map(item => ({
-    key: item.value,
-    label: item.label,
-    value: item.value,
-  }));
-
   // Function: Find service provider
   const findServiceProvider = () => {
     console.log(parsedData)
-    if (selectedDate && selectedTime) {
+    if (selectedDate) {
       router.push({
         pathname: "/serviceProvider/serviceProviderBrowse",
         params: {
           data: JSON.stringify({
             selectedDate: selectedDate,
-            selectedTime: selectedTime,
             ...parsedData,
           })
         }
@@ -68,39 +47,18 @@ const BookingScreen = () => {
         onDayPress={onDayPress}
       />
 
-      {selectedDate && (
-        <View>
-          <Text style={styles.timeTitle}>Time</Text>
-          <DropDownPicker
-            open={open}
-            value={selectedTime}
-            items={items}
-            setOpen={setOpen}
-            setValue={setSelectedTime}
-            setItems={setItems}
-            placeholder="Select a time slot"
-            dropDownDirection="BOTTOM"
-            containerStyle={styles.dropdownContainer}
-            style={styles.dropdown}
-            labelStyle={styles.dropdownLabel}
-            placeholderStyle={styles.dropdownPlaceholder}
-            scrollViewProps={{ nestedScrollEnabled: true }}
-          />
-        </View>
-      )}
-
       {/* Find Service Providers Button */}
       <TouchableOpacity 
         style={[
           styles.findButtonContainer,
-          !(selectedDate && selectedTime) && styles.disabledBtnContainer
+          !(selectedDate) && styles.disabledBtnContainer
         ]} 
-        disabled={!(selectedDate && selectedTime)}
+        disabled={!(selectedDate)}
         onPress={findServiceProvider}
       >
         <Text style={[
           styles.findButtonText,
-          !(selectedDate && selectedTime) && styles.disabledBtnText
+          !(selectedDate) && styles.disabledBtnText
         ]}>
           Find Service Providers
         </Text>

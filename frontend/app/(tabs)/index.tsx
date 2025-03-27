@@ -9,21 +9,21 @@ import {
     Dimensions,
     Image,
 } from 'react-native';
-import { Link, useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 const HomeScreen = () => {
     
     const router = useRouter();
 
     const services = [
-        { id: '1', name: 'Home Cleaning', icon: require('../../assets/icons/homecleaning.webp') },
-        { id: '2', name: 'Deep Cleaning', icon: require('../../assets/icons/deepcleaning.png') },
-        { id: '3', name: 'Air-con Servicing', icon: require('../../assets/icons/aircon.png') },
-        { id: '4', name: 'Laundry', icon: require('../../assets/icons/laundry.png') },
-        { id: '5', name: 'Electrical', icon: require('../../assets/icons/electrical.png') },
-        { id: '6', name: 'Plumbing', icon: require('../../assets/icons/plumbing.png') },
-        { id: '7', name: 'Repair & Assembly', icon: require('../../assets/icons/repair.png') },
-        { id: '8', name: 'Pest Control', icon: require('../../assets/icons/pestcontrol.png') },
+        { id: '1', name: 'Home Cleaning', icon: require('../../assets/icons/homecleaning.webp'), disabled: true },
+        { id: '2', name: 'Deep Cleaning', icon: require('../../assets/icons/deepcleaning.png'), disabled: true },
+        { id: '3', name: 'Air-con Servicing', icon: require('../../assets/icons/aircon.png'), disabled: false },
+        { id: '4', name: 'Laundry', icon: require('../../assets/icons/laundry.png'), disabled: true },
+        { id: '5', name: 'Electrical', icon: require('../../assets/icons/electrical.png'), disabled: true },
+        { id: '6', name: 'Plumbing', icon: require('../../assets/icons/plumbing.png'), disabled: true },
+        { id: '7', name: 'Repair & Assembly', icon: require('../../assets/icons/repair.png'), disabled: true },
+        { id: '8', name: 'Pest Control', icon: require('../../assets/icons/pestcontrol.png'), disabled: true },
     ];
 
     const listings = [
@@ -39,24 +39,26 @@ const HomeScreen = () => {
     ];
 
     const onPressService = (item) => {
-        console.log(item);
-        router.push({
-            pathname: "/issue/description",
-            params: {
-              data: JSON.stringify({
-                service: JSON.stringify(item),
-              })
-            }
-          })
-    }
+        if (!item.disabled) {
+            router.push({
+                pathname: "/issue/description",
+                params: {
+                    data: JSON.stringify({
+                        service: JSON.stringify(item),
+                    })
+                }
+            });
+        }
+    };
 
     const renderService = ({ item }) => (
         <TouchableOpacity 
-            style={styles.serviceTypeBox}
+            style={[styles.serviceTypeBox, item.disabled && styles.disabledService]}
             onPress={() => onPressService(item)}
+            disabled={item.disabled}
         >
             <Image source={item.icon} style={styles.serviceTypeIcon} />
-            <Text style={styles.serviceText}>{item.name}</Text>
+            <Text style={styles.serviceText}>{item.disabled ? `${item.name}\n(Coming Soon)` : item.name}</Text>
         </TouchableOpacity>
     );
 
@@ -169,6 +171,10 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3, // Android shadow
         margin: 8, // Space between boxes
+    },
+    disabledService: {
+        backgroundColor: '#ddd',
+        opacity: 0.5,
     },
     serviceTypeIcon: {
         width: screenWidth / 10, // Reduce icon size

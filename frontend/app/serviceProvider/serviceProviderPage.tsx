@@ -7,6 +7,7 @@ import Divider from '@/components/divider';
 import BackButton from '@/components/BackButton';
 import CalendarPrice from '@/components/calendarPrice';
 import { fetchServiceReviewByServiceProviderId } from '@/services/serviceReviewApi';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function ServiceProviderPage ({}) {
 
@@ -15,14 +16,25 @@ export default function ServiceProviderPage ({}) {
    
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [isCalendarVisible, setCalendarVisible] = useState(false);
     const [reviews, setReviews] = useState([]);
 
-    // const reviews = [
-    //     { id: "1", name: "John Doe", rating: 5, comment: "Great service! Highly recommend." },
-    //     { id: "2", name: "Jane Smith", rating: 4, comment: "Very professional and on time!" },
-    //     { id: "3", name: "Mike Johnson", rating: 3, comment: "Good service, but could improve punctuality." },
-    // ];
+    const [open, setOpen] = useState(false);
+    const [items, setItems] = useState(
+        Array.from({ length: 24 * 2 }, (_, i) => {
+            const hour = Math.floor(i / 2);
+            const minute = i % 2 === 0 ? "00" : "30";
+            const time = `${hour % 12 === 0 ? 12 : hour % 12}:${minute} ${hour < 12 ? "AM" : "PM"}`;
+    
+            // Exclude 12 AM - 6 AM and 2 PM - 4 PM
+            if ((hour >= 0 && hour < 6) || (hour >= 14 && hour < 16)) {
+                return null; // Filter out these times
+            }
+    
+            return { label: `${time} - $45`, value: time };
+        }).filter(Boolean) // Remove null values
+    );
 
     useEffect(() => {
         fetchReviewProvider();
@@ -49,43 +61,34 @@ export default function ServiceProviderPage ({}) {
         }
     };
 
-    // Booking handler - send data to backend
-    const handleBook = async () => {
-        if (!selectedDate) {
-            Alert.alert('Error', 'Please select a date before booking.');
-            return;
+    const bookProviderOnPress = () => {
+
+        // From finding aircon service
+        if (parsedData?.description) {
+            handleBook();
+
+        // FROM 'browse' tab
+        } else {
+            setCalendarVisible(true)
         }
+        
+    }
 
-        // Mock API request for booking
-        const bookingData = {
-            description: parsedData?.service?.category,
-            date: selectedDate,
-            price: 0,
-            providerId: parsedData?.provider?.id,
-            userId: "user123", // Assuming you have a user ID
-        };
-
-        try {
-            // Example: sending the booking data to the backend (boilerplate)
-            const response = await fetch('https://your-api-url.com/book', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(bookingData),
+    // Book Service
+    const handleBook = () => {
+        if (parsedData?.selectedDate) {
+            router.push({
+                pathname: "../review/reviewOrder",
+                params: {
+                data: JSON.stringify({
+                    selectedTime: selectedTime,
+                    selectedPrice: 40,
+                    ...parsedData,
+                })
+                }
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to book provider');
-            }
-
-            Alert.alert('Success', 'Booking successfully made!');
-            router.push('/booking/confirmation'); // Assuming you have a confirmation page
-
-        } catch (error) {
-            Alert.alert('Error', 'There was an issue booking the provider. Please try again later.');
         }
-    };
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -101,18 +104,74 @@ export default function ServiceProviderPage ({}) {
                     <FontAwesome name="map-marker" size={18} color="gray" />
                     <Text style={styles.location}>{parsedData?.provider?.distance || parsedData?.distance} km</Text>
                 </View>
-                <Text style={styles.price}>Starting from {parsedData?.provider?.price || parsedData?.price ||50} SGD</Text>
+                <Text style={styles.price}>
+                    {parsedData?.selectedTime ? 'Price' : 'Starting from'} {parsedData?.provider?.price || parsedData?.price ||50} SGD
+                </Text>
+            </View>
+            
+            {/* Select Time */}
+            <View style={{ marginBottom: 20 }}>
+                <Text style={styles.timeTitle}>Starting Time</Text>
+                <DropDownPicker
+                    open={open}
+                    value={selectedTime}
+                    items={items}
+                    setOpen={setOpen}
+                    setValue={setSelectedTime} // <-- This ensures the selected value updates
+                    setItems={setItems}
+                    placeholder="Select a time slot"
+                    dropDownDirection="BOTTOM"
+                    containerStyle={styles.dropdownContainer}
+                    style={styles.dropdown}
+                    labelStyle={styles.dropdownLabel}
+                    placeholderStyle={styles.dropdownPlaceholder}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                />  
             </View>
 
             {/* Buttons */}
             <View style={styles.buttonContainer}>
-                <Pressable style={[styles.button, styles.bookButton]} onPress={() => setCalendarVisible(true)}>
+                <Pressable style={[styles.button, styles.bookButton]} onPress={bookProviderOnPress}>
                     <Text style={styles.buttonText}>Book Provider</Text>
                 </Pressable>
                 <Pressable style={[styles.button, styles.shareButton]} onPress={handleShare}>
                     <FontAwesome name="share" size={20} color="white" />
                     <Text style={styles.buttonText}>Share</Text>
                 </Pressable>
+            </View>
+            
+            {/* Divider */}
+            <Divider customStyle={styles.divider} />
+
+            {/* Rating and Reviews */}
+            <View style={[styles.reviewHeader, {"marginBottom": 10}]}>
+                <Text style={styles.sectionTitle}>Customer Reviews</Text>
+
+                {reviews?.length != 0 && (
+                    <View style={styles.reviewHeader}>
+                        <Text style={styles.reviewText}>({parsedData?.provider?.reviews?.length || reviews?.length})</Text>
+                        <Text style={styles.rating}>{parsedData?.provider?.rating}</Text>
+                        <FontAwesome name="star" size={18} color="#fabb05" />
+                    </View>
+                )}
+                
+            </View>
+            <View style={styles.ratingContainer}>
+                {reviews?.length == 0 && (
+                    <Text>No Reviews</Text>
+                )}
+                {reviews?.map((review, index) => (
+                    <View style={styles.reviewCard} key={index}>
+                        <View style={styles.reviewHeader}>
+                            <Text style={styles.reviewName}>{review.name || "John Doe"}</Text>
+                            <View style={styles.reviewRating}>
+                                <Text style={styles.reviewText}> {review.rating}</Text>
+                                <FontAwesome name="star" size={16} color="#fabb05" />
+                            </View>
+                        </View>
+                        <Text style={styles.reviewComment}>{review.comments}</Text>
+                    </View>
+                ))}
             </View>
 
             {/* Divider */}
@@ -133,30 +192,8 @@ export default function ServiceProviderPage ({}) {
             )}
 
             {selectedDate && (
-                <Text style={styles.price}>Price: {0}</Text>
+                <Text style={styles.price}>Price: {45} SGD</Text>
             )}
-
-            {/* Rating and Reviews */}
-            <View style={[styles.reviewHeader, {"marginBottom": 10}]}>
-                <Text style={styles.sectionTitle}>Customer Reviews</Text>
-                <Text style={styles.reviewText}>({parsedData?.provider?.reviews?.length || reviews?.length})</Text>
-                <FontAwesome name="star" size={18} color="#fabb05" />
-            </View>
-            <View style={styles.ratingContainer}>
-                {reviews?.map((review, index) => (
-                    <View style={styles.reviewCard} key={index}>
-                        <View style={styles.reviewHeader}>
-                            <Text style={styles.reviewName}>{review.name || "John Doe"}</Text>
-                            <View style={styles.reviewRating}>
-                                <Text style={styles.reviewText}> {review.rating}</Text>
-                                <FontAwesome name="star" size={16} color="#fabb05" />
-                            </View>
-                        </View>
-                        <Text style={styles.reviewComment}>{review.comments}</Text>
-                    </View>
-                ))}
-                <Text style={styles.rating}>{parsedData?.provider?.rating}</Text>
-            </View>
 
             {/* Book Button - Submit booking */}
             {isCalendarVisible && selectedDate && (
@@ -183,6 +220,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 5,
+        marginTop: 20
     },
     name: {
         fontSize: 22,

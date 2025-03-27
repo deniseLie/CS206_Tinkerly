@@ -88,40 +88,6 @@ const DescribeIssue = () => {
 
                 {/* Service Date & Time */}
                 <Text style={styles.sectionTitle}>Service date & Time</Text>
-                <View style={styles.buttonGroup}>
-                    <TouchableOpacity
-                        style={[
-                            styles.buttonBox,
-                            activeButton === 'urgent' && styles.activeButtonBox,
-                        ]}
-                        onPress={() => setActiveButton('urgent')}
-                    >
-                        <Text
-                            style={[
-                                styles.buttonText,
-                                activeButton === 'urgent' && styles.activeButtonText,
-                            ]}
-                        >
-                            Urgent (today)
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[
-                            styles.buttonBox,
-                            activeButton === 'schedule' && styles.activeButtonBox,
-                        ]}
-                        onPress={() => setActiveButton('schedule')}
-                    >
-                        <Text
-                            style={[
-                                styles.buttonText,
-                                activeButton === 'schedule' && styles.activeButtonText,
-                            ]}
-                        >
-                            Schedule for later
-                        </Text>
-                    </TouchableOpacity>
-                </View>
 
 
                 {/* Confirm Address */}

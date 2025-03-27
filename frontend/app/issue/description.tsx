@@ -14,12 +14,13 @@ import BackButton from '@/components/BackButton';
 const Description = () => {
     const router = useRouter();
     const services = [
-        { id: '1', category: 'AC Installation', providers: '15 Service Providers', price: '25 - 50 SGD' },
-        { id: '2', category: 'AC Repair', providers: '15 Service Providers', price: '25 - 50 SGD' },
-        { id: '3', category: 'AC Replacement', providers: '15 Service Providers', price: '25 - 50 SGD' },
+        { id: '1', category: 'AC Repair', providers: '15 Service Providers', price: '25 - 50 SGD', disabled: false },
+        { id: '2', category: 'AC Installation', providers: '15 Service Providers', price: '25 - 50 SGD', disabled: true },
+        { id: '3', category: 'AC Replacement', providers: '15 Service Providers', price: '25 - 50 SGD', disabled: true },
     ];
 
     const onPressService = (item) => {
+        if (item.disabled) return;
         router.push({
             pathname: "/issue/describeissue",
             params: {
@@ -32,12 +33,12 @@ const Description = () => {
 
     const renderService = ({ item }) => (
         <TouchableOpacity 
-        style={styles.serviceCard}
-        onPress={() => onPressService(item)}
+            style={[styles.serviceCard, item.disabled && styles.disabledService]}
+            onPress={() => onPressService(item)}
         >
             <Text style={styles.serviceCategory}>{item.category}</Text>
+            {item.disabled && (<Text style={styles.serviceText}>(Coming Sooon) {`\n`}</Text>)}
             <Text style={styles.serviceDetails}>{item.providers}</Text>
-            <Text style={styles.serviceDetails}>{item.price}</Text>
         </TouchableOpacity>
     );
 
@@ -115,6 +116,10 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3, // Shadow for Android
         height: screenHeight / 6,
+    },
+    disabledService: {
+        backgroundColor: '#ddd',
+        opacity: 0.5,
     },
     serviceCategory: {
         fontSize: 16,

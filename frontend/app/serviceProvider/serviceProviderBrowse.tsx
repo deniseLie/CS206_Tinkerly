@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import ReviewOrder from '../review/revieworder';
+import ReviewOrder from '../review/reviewOrder';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LocationSearchBar, SearchBar } from '@/components/SearchBar';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
@@ -52,29 +52,10 @@ export default function ServiceProviderBrowse() {
       if (activeFilter === "Highest Rated") return b.rating - a.rating;
       return 0;
     });
-  
-  // Book Service
-  const bookService = (service) => {
-    console.log(service);
-
-    if (parsedData?.selectedDate && parsedData?.selectedTime) {
-      router.push({
-        pathname: "../review/revieworder",
-        params: {
-          data: JSON.stringify({
-            selectedDate: parsedData.selectedDate,
-            selectedTime: parsedData.selectedTime,
-            selectedService: service,
-            ...parsedData,
-          })
-        }
-      });
-    }
-  }
 
   return (
     <View style={styles.container}>
-      <BackButton text="Reselect Date/time" isHomeButton={true}/>
+      <BackButton text="Reselect Date/time" isHomeButton={true} noMargin={true}/>
       <LocationSearchBar />
       <Text style={styles.headerText}>{parsedData?.service?.category || "All Services"}</Text>
       {parsedData?.selectedDate && parsedData?.selectedTime && (
@@ -88,29 +69,43 @@ export default function ServiceProviderBrowse() {
           <FontAwesome size={30} name="question-circle" color={"gray"} />
         </Pressable>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={{ paddingHorizontal: 10, paddingVertical: 5 }} // Added padding
+        style={styles.filterContainer}
+      >
         {filterOptions.map((option, index) => (
-          <ButtonFilter key={index} buttonText={option} onPress={() => setActiveFilter(option)} active={activeFilter === option} />
+          <ButtonFilter 
+            key={index} 
+            buttonText={option} 
+            onPress={() => setActiveFilter(option)} 
+            active={activeFilter === option} 
+          />
         ))}
       </ScrollView>
 
+        
       {loading ? (
         <ActivityIndicator size="large" color="gray" />
       ) : (
-        <View style={styles.servicesContainer}>
-          {filteredServices.map((service, index) => (
+        <FlatList
+          data={filteredServices}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
             <Link
-              key={index}
               href={{
                 pathname: `/serviceProvider/serviceProviderPage`,
-                params: { data: JSON.stringify({ provider: service, ...parsedData }) },
+                params: { data: JSON.stringify({ provider: item, ...parsedData }) },
               }}
               style={{ textDecorationLine: 'none' }}
             >
-              <ServiceProviderCard service={service} />
+              <ServiceProviderCard service={item} />
             </Link>
-          ))}
-        </View>
+          )}
+          contentContainerStyle={styles.servicesContainer} 
+          showsVerticalScrollIndicator={false} // Hides scrollbar
+        />
       )}
     </View>
   );
@@ -121,6 +116,6 @@ const styles = StyleSheet.create({
   headerText: { fontSize: 20, fontWeight: '500' },
   subHeadertext: { fontSize: 18, marginTop: 10, fontWeight: 'bold' },
   searchFilterProviderContainer: { flexDirection: 'row', gap: 10, marginVertical: 10 },
-  filterContainer: { flexGrow: 0, marginTop: 10, marginBottom: 20 },
+  filterContainer: { flexGrow: 0, marginTop: 10, marginBottom: 10, height: 80 },
   servicesContainer: { gap: 20 }
 });

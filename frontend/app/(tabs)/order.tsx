@@ -1,11 +1,30 @@
-import React, { useState } from 'react';
-import { StyleSheet, Platform, Pressable, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Platform, Pressable, View, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import OrderCard from '@/components/OrderCard';
+import { fetchServices } from '@/services/serviceApi';
+import { Service } from '@/types/interface';
 
 export default function Order() {
-  const [activeTab, setActiveTab] = useState('ongoing');
+  const [activeTab, setActiveTab] = useState<'ongoing' | 'finished'>('ongoing');
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const data = await fetchServices();
+        setServices(data);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadServices();
+  }, []);
 
   return (
     <ThemedView style={styles.container}>
@@ -50,21 +69,25 @@ export default function Order() {
 
       {/* Orders List */}
       <View style={styles.ordersList}>
-        {activeTab === 'ongoing' && (
-          <View style={styles.tabContainer}>
-            <ThemedText style={styles.dateText}>23 Jan 2025</ThemedText>
-            <OrderCard 
-              order={{
-                companyName: 'Ah Beng AC Services Pte Ltd',
-                services: [{ name: '1x AC Repair', price: 35.00 }],
-                travellingCost: 5.00,
-                consultationFee: 5.00,
-                startTime: '14:30',
-                endTime: '15:30',
-                trackOrder: true
-              }}
-            />
-          </View>
+        {loading ? (
+          <ActivityIndicator size="large" color="#41A48F" />
+        ) : (
+          services.map((service) => (
+            <View key={service.typeID} style={styles.tabContainer}>
+              <ThemedText style={styles.dateText}>{service.date.toString()}</ThemedText>
+              <OrderCard 
+                order={{
+                  companyName: 'Service Provider', // Adjust based on your API response
+                  services: [{ name: service.description, price: service.finalPrice }],
+                  travellingCost: 5.00,
+                  consultationFee: 5.00,
+                  startTime: service.time,
+                  endTime: 'N/A', // Adjust if you have an end time
+                  trackOrder: activeTab === 'ongoing'
+                }}
+              />
+            </View>
+          ))
         )}
       </View>
     </ThemedView>
@@ -134,3 +157,4 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 });
+

@@ -20,7 +20,7 @@ export default function BackButton({ text, noMargin = false, isHomeButton = fals
                     style={[styles.backButton, noMargin && { marginLeft: 0 }]}
                     onPress={handlePress}
                 >
-                    <FontAwesome name="arrow-left" size={20} color="#41A48F" />
+                    <FontAwesome name="chevron-left" size={20} color="#41A48F" />
                     <Text style={styles.text}>{text}</Text>
                 </Pressable>
             )}

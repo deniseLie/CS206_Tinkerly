@@ -14,8 +14,8 @@ export const fetchServiceById = async (id: number): Promise<Service> => {
 };
 
 // Create a new service
-export const createService = async (service: Partial<Service>): Promise<Service> => {
-    const response = await api.post('/services', service);
+export const createService = async (body) => {
+    const response = await api.post('/services', body);
     return response.data;
 };
 

@@ -1,42 +1,63 @@
+import { useState } from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { Calendar } from "react-native-calendars";
+import moment from "moment";
 
 export default function CalendarPrice ({
     selectedDate, onDayPress
 }) {
+    const today = moment().format("YYYY-MM-DD")
+    const tomorrow = moment().add(1, "day").format("YYYY-MM-DD");
+
+    // Ensure selectedDate is today if it's undefined
+    const [currentSelectedDate, setCurrentSelectedDate] = useState(selectedDate || today);
+
+    const handleDayPress = (date) => {
+        setCurrentSelectedDate(date.dateString);
+        onDayPress(date);
+    };
+
     return (
         <Calendar
-            current={"2025-03-01"}
-            minDate={"2025-03-01"}
-            maxDate={"2025-03-31"}
+            current={today}
+            minDate={"2025-04-01"}
+            maxDate={"2025-04-31"}
             onDayPress={onDayPress} 
-            dayComponent={({ date, state }) => (
-                <TouchableOpacity 
-                    style={[
-                        styles.dayContainer,
-                        date.dateString === selectedDate && styles.selectedDayContainer,
-                    ]} 
-                    onPress={() => onDayPress(date)} 
-                    disabled={state === "disabled"}
-                >
-                    <Text
-                    style={[
-                        styles.dayText,
-                        state === "disabled" && styles.disabledDayText,
-                        date.dateString === selectedDate && styles.selectedDayText,
-                    ]}
+            markedDates={{
+                [currentSelectedDate]: { selected: true, selectedColor: "#41A48F" }
+            }}
+            dayComponent={({ date, state }) => {
+                const isTomorrow = date.dateString === tomorrow;
+                const price = isTomorrow ? 40 : date.day % 7 === 3 ? 65 : 45;
+
+                return (
+                    <TouchableOpacity 
+                        style={[
+                            styles.dayContainer,
+                            date.dateString === currentSelectedDate && styles.selectedDayContainer,
+                        ]} 
+                        onPress={() => onDayPress(date)} 
+                        disabled={state === "disabled"}
                     >
-                    {date.day}
-                    </Text>
-                    <Text style={[
-                        styles.calendarPriceText,
-                        state === "disabled" && styles.disabledDayText,
-                        date.dateString === selectedDate && styles.selectedDayText,
-                    ]}>
-                        ${date.day % 7 === 3 ? 65 : 45}
-                    </Text>
-                </TouchableOpacity >
-            )}
+                        <Text
+                        style={[
+                            styles.dayText,
+                            state === "disabled" && styles.disabledDayText,
+                            date.dateString === currentSelectedDate && styles.selectedDayText,
+                        ]}
+                        >
+                        {date.day}
+                        </Text>
+                        <Text style={[
+                            styles.calendarPriceText,
+                            state === "disabled" && styles.disabledDayText,
+                            date.dateString === currentSelectedDate && styles.selectedDayText,
+                        ]}>
+                            ${price}
+                        </Text>
+                    </TouchableOpacity >
+                )
+            }}
             theme={{
                 selectedDayBackgroundColor: "#41A48F",
                 todayTextColor: "#41A48F",

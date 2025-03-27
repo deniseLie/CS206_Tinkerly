@@ -1,13 +1,16 @@
 
 // BOOK / SERVICE
 export interface Service {
-    serviceID: number;
+    typeID: number;             // Renamed from serviceID
     description: string;
-    serviceType: string;
-    basePrice: number;
-    date: Date;
+    serviceType?: string;       // Optional, since it's not in JSON
+    finalPrice: number;         // Renamed from basePrice
+    date: Date;                 // Should be stored as Date
     time: string;
+    extraRequirement: string;   // New field
+    customerID: number;         // New field
 }
+
 
 export interface ServiceProvider {
     spID: number;
