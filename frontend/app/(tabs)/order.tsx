@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Platform, Pressable, View, ActivityIndicator } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import OrderCard from '@/components/OrderCard';
+import { StyleSheet, Platform, Pressable, View, Text } from 'react-native';
 import { fetchServices } from '@/services/serviceApi';
 import { Service } from '@/types/interface';
-import ShortOrderCard from '@/components/shortOrderCard';
 import OrdersList from '@/components/OrdersList';
 
 export default function Order() {
@@ -30,49 +26,49 @@ export default function Order() {
   }, []);
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
-      <ThemedView style={styles.header}>
-        <ThemedText style={styles.headerTitle}>Orders</ThemedText>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Orders</Text>
         <View style={styles.placeholder} />
-      </ThemedView>
+      </View>
 
       {/* Tabs */}
-      <ThemedView style={styles.tabsContainer}>
-        <ThemedView style={styles.tabWrapper}>
+      <View style={styles.tabsContainer}>
+        <View style={styles.tabWrapper}>
           <Pressable 
             style={styles.tab} 
             onPress={() => setActiveTab('ongoing')}
           >
-            <ThemedText style={[
+            <Text style={[
               styles.tabText, 
               activeTab === 'ongoing' && styles.activeTabText
             ]}>
               Ongoing
-            </ThemedText>
+            </Text>
           </Pressable>
           {activeTab === 'ongoing' && <View style={styles.activeTabLine} />}
-        </ThemedView>
+        </View>
 
-        <ThemedView style={styles.tabWrapper}>
+        <View style={styles.tabWrapper}>
           <Pressable 
             style={styles.tab}
             onPress={() => setActiveTab('finished')}
           >
-            <ThemedText style={[
+            <Text style={[
               styles.tabText, 
               activeTab === 'finished' && styles.activeTabText
             ]}>
               Finished
-            </ThemedText>
+            </Text>
           </Pressable>
           {activeTab === 'finished' && <View style={styles.activeTabLine} />}
-        </ThemedView>
-      </ThemedView>
+        </View>
+      </View>
 
       {/* Orders List */}
       <OrdersList services={services} loading={loading} activeTab={activeTab}/>
-    </ThemedView>
+    </View>
   );
 }
 

@@ -9,7 +9,7 @@ exports.getProvidersByServiceType = async (req, res) => {
       include: {
         model: ServiceType,
         where: { type },
-        attributes: [], // Exclude service type details from the response
+        attributes: ['basePrice', 'consultPrice'], // Exclude service type details from the response
       },
     });
 

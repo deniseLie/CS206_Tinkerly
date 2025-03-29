@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
+import { View, ScrollView, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import ShortOrderCard from '@/components/shortOrderCard';
 
 const OrdersList = ({ services, loading, activeTab }) => {
@@ -32,7 +31,7 @@ const OrdersList = ({ services, loading, activeTab }) => {
       ) : (
         Object.keys(groupedServices).map((date) => (
           <View key={date}>
-            <ThemedText style={styles.dateHeading}>{date.toString()}</ThemedText>
+            <Text style={styles.dateHeading}>{date.toString()}</Text>
             {groupedServices[date].map((service, index) => (
               <View key={index} style={styles.tabContainer}>
                 <ShortOrderCard order={{

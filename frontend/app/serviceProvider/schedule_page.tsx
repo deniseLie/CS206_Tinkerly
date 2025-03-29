@@ -1,7 +1,7 @@
 import BackButton from "@/components/BackButton";
 import CalendarPrice from "@/components/calendarPrice";
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import moment from "moment";
@@ -17,7 +17,6 @@ const BookingScreen = () => {
   const parsedData = data ? JSON.parse(data) : null;
   const [selectedDate, setSelectedDate] = useState<string | null>(today);
   
-
   // Set the selected date
   const onDayPress = (day) => {
     setSelectedDate(day.dateString);  
@@ -25,13 +24,19 @@ const BookingScreen = () => {
 
   // Function: Find service provider
   const findServiceProvider = () => {
-    console.log(parsedData)
+    // console.log(parsedData)
+
+    const tomorrow = moment().add(1, "day").format("YYYY-MM-DD");
+    const isTomorrow = selectedDate.dateString === tomorrow;
+    const minPrice = isTomorrow ? 40 : selectedDate.day % 7 === 3 ? 65 : 45; 
+
     if (selectedDate) {
       router.push({
         pathname: "/serviceProvider/serviceProviderBrowse",
         params: {
           data: JSON.stringify({
             selectedDate: selectedDate,
+            minPrice    : minPrice,
             ...parsedData,
           })
         }
@@ -40,7 +45,7 @@ const BookingScreen = () => {
   }
 
   return (
-    <View style={styles.container} keyboardShouldPersistTaps="handled">
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
 
       <BackButton text="Schedule" noMargin={true} isHomeButton={true}/>
 
@@ -66,7 +71,7 @@ const BookingScreen = () => {
           Find Service Providers
         </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

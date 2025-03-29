@@ -1,7 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, Pressable } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { StyleSheet, Platform, View, Text } from 'react-native';
 
 // Define the structure of the service object
 type Service = {
@@ -30,43 +28,43 @@ const OrderCard = ({ order }: { order: OrderProps }) => {
   const grandTotal = subtotal + tinkerlyFee;
 
   return (
-    <ThemedView style={styles.card}>
-      <ThemedText style={styles.companyName}>{order.companyName}</ThemedText>
+    <View style={styles.card}>
+      <Text style={styles.companyName}>{order.companyName}</Text>
 
-      <ThemedView style={styles.row}>
-        <ThemedText>{order.service.name} ({order.service.startTime}-{order.service.endTime})</ThemedText>
-        <ThemedText>S${order?.service?.finalPrice || order?.finalPrice}</ThemedText>
-      </ThemedView>
+      <View style={styles.row}>
+        <Text>{order.service.name} ({order.service.startTime}-{order.service.endTime})</Text>
+        <Text>S${order?.service?.finalPrice || order?.finalPrice}</Text>
+      </View>
 
-      <ThemedView style={styles.row}>
-        <ThemedText>Travelling Cost</ThemedText>
-        <ThemedText>S${order.travellingCost}</ThemedText>
-      </ThemedView>
+      <View style={styles.row}>
+        <Text>Travelling Cost</Text>
+        <Text>S${order.travellingCost}</Text>
+      </View>
 
-      <ThemedView style={styles.row}>
-        <ThemedText>Consultation Fee</ThemedText>
-        <ThemedText>S${order.consultationFee}</ThemedText>
-      </ThemedView>
+      <View style={styles.row}>
+        <Text>Consultation Fee</Text>
+        <Text>S${order.consultationFee}</Text>
+      </View>
 
-      <ThemedView style={styles.divider} />
+      <View style={styles.divider} />
 
-      <ThemedView style={styles.row}>
-        <ThemedText style={styles.subtotalText}>Subtotal</ThemedText>
-        <ThemedText>S${subtotal}</ThemedText>
-      </ThemedView>
+      <View style={styles.row}>
+        <Text style={styles.subtotalText}>Subtotal</Text>
+        <Text>S${subtotal}</Text>
+      </View>
 
-      <ThemedView style={styles.row}>
-        <ThemedText>Tinkerly Fee (5%)</ThemedText>
-        <ThemedText>S${tinkerlyFee}</ThemedText>
-      </ThemedView>
+      <View style={styles.row}>
+        <Text>Tinkerly Fee (5%)</Text>
+        <Text>S${tinkerlyFee}</Text>
+      </View>
 
-      <ThemedView style={styles.divider} />
+      <View style={styles.divider} />
 
-      <ThemedView style={styles.row}>
-        <ThemedText style={styles.totalText}>Grand Total</ThemedText>
-        <ThemedText style={styles.totalText}>S${grandTotal}</ThemedText>
-      </ThemedView>
-    </ThemedView>
+      <View style={styles.row}>
+        <Text style={styles.totalText}>Grand Total</Text>
+        <Text style={styles.totalText}>S${grandTotal}</Text>
+      </View>
+    </View>
   );
 };
 

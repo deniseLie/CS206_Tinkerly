@@ -22,7 +22,7 @@ const ProfileScreen = () => {
             <Text style={styles.info}>{user.phone}</Text>
 
             {/* Edit Profile Button */}
-            <TouchableOpacity style={styles.button} onPress={() => router.push("/profile/edit")}>
+            <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Edit Profile</Text>
             </TouchableOpacity>
         </View>

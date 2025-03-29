@@ -8,6 +8,7 @@ import {
     Image,
     Modal,
     Dimensions,
+    ScrollView
 } from 'react-native';
 import BackButton from '@/components/BackButton';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
@@ -53,7 +54,7 @@ const DescribeIssue = () => {
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {/* Header */}
             {/* Back Button */}
             <BackButton text={"Back"} isHomeButton={true}/>
@@ -130,7 +131,7 @@ const DescribeIssue = () => {
                 <Text style={styles.continueButtonText}>Continue</Text>
             </TouchableOpacity>
 
-        </View>
+        </ScrollView>
     );
 };
 

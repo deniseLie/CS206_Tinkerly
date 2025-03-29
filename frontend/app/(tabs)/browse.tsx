@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LocationSearchBar, SearchBar } from '@/components/SearchBar';
-import { ScrollView } from 'react-native-gesture-handler';
 import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Link } from 'expo-router';
@@ -15,13 +14,6 @@ export default function Browse() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilter, setActiveFilter] = useState<string>("Recommended");
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"]
-
-  // const allServices = [
-  //   { name: 'Bugis Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 55 },
-  //   { name: 'Kim Chuan Air-Con', services: "AC Services", distance: "1 km", rating: 4.85, reviews: "11.9k", price: 50 },
-  //   { name: 'Comfort Cooling', services: "AC Services", distance: "3 km", rating: 4.9, reviews: "5.2k", price: 60 },
-  //   { name: 'Quick Fix Air-Con', services: "AC Services", distance: "2 km", rating: 4.7, reviews: "7.3k", price: 52 },
-  // ];
 
   const filteredServices = serviceProvider
     .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -49,7 +41,7 @@ export default function Browse() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
 
       <LocationSearchBar />
       
@@ -95,7 +87,7 @@ export default function Browse() {
           </Link>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -126,6 +118,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   servicesContainer: {
-    gap: 20
+    gap: 20,
+    marginBottom: 70
   }
 })

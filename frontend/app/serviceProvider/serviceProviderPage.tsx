@@ -20,9 +20,10 @@ export default function ServiceProviderPage ({}) {
     const [isCalendarVisible, setCalendarVisible] = useState(false);
     const [reviews, setReviews] = useState([]);
 
+    console.log(parsedData?.service?.price);
     
     const price = parsedData?.provider?.price || 
-            (selectedTime && getPrice(parseInt(selectedTime.slice(0, 2), 10)))|| 
+            (selectedTime && getPrice(parsedData, parseInt(selectedTime.slice(0, 2), 10)))|| 
             parsedData?.service?.price;
 
     const [open, setOpen] = useState(false);
@@ -37,7 +38,7 @@ export default function ServiceProviderPage ({}) {
                 return null; // Filter out these times
             }
             
-            let price = getPrice(hour);
+            let price = getPrice(parsedData, hour);
     
             return { label: `${time} - $${price}`, value: time };
         }).filter(Boolean) // Remove null values
@@ -209,22 +210,23 @@ export default function ServiceProviderPage ({}) {
     );
 }
 
-const getPrice = (hour) => {
-    let price = 45; // Default price
+const getPrice = (parsedData, hour) => {
+    let minPrice = parsedData?.minPrice || 45;
+    let price = minPrice; // Default price
 
     // Adjust price based on time
     if (hour >= 6 && hour < 9) {
-        price = 30; // Morning (6 AM - 9 AM) is cheaper
+        price = minPrice; // Morning (6 AM - 9 AM) is cheaper
     } else if (hour >= 9 && hour < 12) {
-        price = 45; // Regular price (9 AM - 12 PM)
+        price = minPrice + 15; // Regular price (9 AM - 12 PM)
     } else if (hour >= 12 && hour < 14) {
-        price = 50; // Midday (12 PM - 2 PM) is slightly more expensive
+        price = minPrice + 20; // Midday (12 PM - 2 PM) is slightly more expensive
     } else if (hour >= 16 && hour < 18) {
-        price = 55; // Late afternoon (4 PM - 6 PM) is more expensive
+        price = minPrice + 25; // Late afternoon (4 PM - 6 PM) is more expensive
     } else if (hour >= 18 && hour < 21) {
-        price = 60; // Evening (6 PM - 9 PM) is even more expensive
+        price = minPrice + 30; // Evening (6 PM - 9 PM) is even more expensive
     } else if (hour >= 21) {
-        price = 40; // Late night (9 PM onwards) is cheaper again
+        price = minPrice + 20; // Late night (9 PM onwards) is cheaper again
     }
     return price;
 }

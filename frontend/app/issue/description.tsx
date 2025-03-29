@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     FlatList,
     Dimensions,
+    ScrollView
 } from 'react-native';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from '@/components/BackButton';
@@ -14,9 +15,9 @@ import BackButton from '@/components/BackButton';
 const Description = () => {
     const router = useRouter();
     const services = [
-        { id: '1', category: 'AC Repair', providers: '15 Service Providers', price: '25 - 50 SGD', disabled: false },
-        { id: '2', category: 'AC Installation', providers: '15 Service Providers', price: '25 - 50 SGD', disabled: true },
-        { id: '3', category: 'AC Replacement', providers: '15 Service Providers', price: '25 - 50 SGD', disabled: true },
+        { id: '1', category: 'AC Repair', providers: '15 Service Providers', disabled: false },
+        { id: '2', category: 'AC Installation', providers: '15 Service Providers', disabled: true },
+        { id: '3', category: 'AC Replacement', providers: '15 Service Providers',  disabled: true },
     ];
 
     const onPressService = (item) => {
@@ -43,7 +44,7 @@ const Description = () => {
     );
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {/* Back Button */}
             <BackButton text={"Back"} />
             
@@ -63,7 +64,7 @@ const Description = () => {
                 renderItem={renderService}
                 contentContainerStyle={styles.servicesList}
             />
-        </View>
+        </ScrollView>
     );
 };
 

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Platform, Pressable, View, Image } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { StyleSheet, Platform, Pressable, View, Image, Text, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -45,44 +43,44 @@ export default function Payment() {
     const isDefault = method.id === 'wallet';
 
     return (
-      <ThemedView style={styles.card}>
-        <ThemedView style={styles.cardContent}>
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
           <Image source={method.icon} style={styles.icon} />
-          <ThemedView style={styles.cardDetails}>
-            <ThemedView style={styles.titleRow}>
-              <ThemedText style={styles.cardTitle}>{method.title}</ThemedText>
+          <View style={styles.cardDetails}>
+            <View style={styles.titleRow}>
+              <Text style={styles.cardTitle}>{method.title}</Text>
               {isDefault && (
-                <ThemedView style={styles.defaultTag}>
-                  <ThemedText style={styles.defaultText}>Default</ThemedText>
-                </ThemedView>
+                <View style={styles.defaultTag}>
+                  <Text style={styles.defaultText}>Default</Text>
+                </View>
               )}
-            </ThemedView>
-            <ThemedText style={styles.subtitle}>{method.subtitle}</ThemedText>
-            <ThemedText style={styles.value}>{method.value}</ThemedText>
-          </ThemedView>
-        </ThemedView>
+            </View>
+            <Text style={styles.subtitle}>{method.subtitle}</Text>
+            <Text style={styles.value}>{method.value}</Text>
+          </View>
+        </View>
         <Pressable
           style={[styles.selectButton, isSelected && styles.selectedButton]}
           // onPress={() => setSelectedMethod(method.id)}
         >
-          <ThemedText style={styles.selectButtonText}>
+          <Text style={styles.selectButtonText}>
               {isSelected ? 'Selected' : 'Select'}
-          </ThemedText>
+          </Text>
         </Pressable>
-      </ThemedView>
+      </View>
     );
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Header */}
-      <ThemedView style={styles.header}>
+      <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color="#41A48F" />
         </Pressable>
-        <ThemedText style={styles.headerTitle}>Payment Methods</ThemedText>
+        <Text style={styles.headerTitle}>Payment Methods</Text>
         <View style={styles.placeholder} />
-      </ThemedView>
+      </View>
 
       {/* Payment Methods List */}
       <View style={styles.content}>
@@ -96,9 +94,9 @@ export default function Payment() {
         style={styles.addButton}
         onPress={() => router.back()}
       >
-        <ThemedText style={styles.addButtonText}>Add payment method</ThemedText>
+        <Text style={styles.addButtonText}>Add payment method</Text>
       </Pressable>
-    </ThemedView>
+    </ScrollView>
   );
 }
 

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Platform, StyleSheet, Pressable, Image, View } from "react-native";
-import { ThemedText } from "./ThemedText"; // Ensure this exists in your project
+import { Platform, StyleSheet, Pressable, Image, View, Text } from "react-native";
 import { router } from 'expo-router';
 
 export default function ShortOrderCard({ order }) {
@@ -32,11 +31,11 @@ export default function ShortOrderCard({ order }) {
     >
       <Image source={require('frontend/assets/images/ahbeng.png')} style={styles.profileImage} />
       <View>
-        <ThemedText style={styles.companyName}>{order?.service?.providerName} ({grandTotal || 50} SGD)</ThemedText>
-        <ThemedText>{order.service?.providerCategory}</ThemedText>
-        <ThemedText>{order.service?.time}</ThemedText>
+        <Text style={styles.companyName}>{order?.service?.providerName} ({grandTotal || 50} SGD)</Text>
+        <Text>{order.service?.providerCategory}</Text>
+        <Text>{order.service?.time}</Text>
         
-        <ThemedText style={styles.status}>Ongoing</ThemedText>
+        <Text style={styles.status}>Ongoing</Text>
         
       </View>
     </Pressable>

@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function ServiceProviderCard({ service, serviceOnPress }) {
+
   return (
     <View style={styles.cardContainer}>
       <Image source={require('frontend/assets/images/ahbeng.png')} style={styles.profileImage} />
@@ -20,14 +21,13 @@ export default function ServiceProviderCard({ service, serviceOnPress }) {
         <View style={styles.ratingContainer}>
             <Text style={styles.ratingText}>{service.rating.toFixed(2)}</Text>
             <FontAwesome name="star" size={14} color="#F4A100" />
-            <Text style={styles.reviewsText}>({service.reviews})</Text>
         </View>
 
         {/* Price */}
         <View style={styles.priceContainer}>
           <Text>Starting From</Text>
           <Pressable style={styles.priceButton} onPress={serviceOnPress}>
-              <Text style={styles.priceText}>{service.price || 40} SGD</Text>
+              <Text style={styles.priceText}>{service?.price || 40} SGD</Text>
           </Pressable>
         </View>
     </View>

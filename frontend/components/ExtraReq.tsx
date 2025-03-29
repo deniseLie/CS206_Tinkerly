@@ -1,16 +1,13 @@
-import { Platform, StyleSheet } from "react-native";
-import { ThemedText } from "./ThemedText";
-import { ThemedView } from "./ThemedView";
-
+import { Platform, StyleSheet, View, Text } from "react-native";
 
 export default function ExtraReq ({ description }) {
     return (
-        <ThemedView style={styles.descriptionCard}>
-            <ThemedText style={styles.descriptionTitle}>Extra Requirements</ThemedText>
-            <ThemedText style={styles.descriptionText}>
+        <View style={styles.descriptionCard}>
+            <Text style={styles.descriptionTitle}>Extra Requirements</Text>
+            <Text style={styles.descriptionText}>
               {description && description }
-            </ThemedText>
-        </ThemedView>
+            </Text>
+        </View>
     )
 }
 

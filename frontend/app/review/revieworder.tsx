@@ -4,12 +4,10 @@ import {
     Platform,
     Pressable,
     View,
-    TextInput,
+    Text,
     ScrollView,
     Modal,
 } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from '@/components/BackButton';
 import DescriptionCard from '@/components/descriptionCard';
@@ -46,18 +44,18 @@ const ReceiptCard = ({
     const formatPrice = (price: number): string => `S$${price}`;
 
     return (
-        <ThemedView style={styles.card}>
-            <ThemedText style={styles.companyName}>{companyName}</ThemedText>
-            <ThemedView style={styles.itemRow}>
-                <ThemedText>{1}x {service.category}</ThemedText>
-                <ThemedText>{formatPrice(selectedPrice)}</ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.itemRow}><ThemedText>Travelling Cost</ThemedText><ThemedText>{formatPrice(travellingCost)}</ThemedText></ThemedView>
-            <ThemedView style={styles.itemRow}><ThemedText>Consultation Fee</ThemedText><ThemedText>{formatPrice(consultationFee)}</ThemedText></ThemedView>
-            {/* <ThemedView style={styles.itemRow}><ThemedText>Subtotal</ThemedText><ThemedText>{formatPrice(subtotal)}</ThemedText></ThemedView> */}
-            <ThemedView style={styles.itemRow}><ThemedText>Tinkerly Fee ({(commissionRate * 100)}%)</ThemedText><ThemedText>{formatPrice(commissionFee)}</ThemedText></ThemedView>
-            <ThemedView style={styles.itemRow}><ThemedText style={styles.totalText}>Grand Total</ThemedText><ThemedText style={styles.totalText}>{formatPrice(grandTotal)}</ThemedText></ThemedView>
-        </ThemedView>
+        <View style={styles.card}>
+            <Text style={styles.companyName}>{companyName}</Text>
+            <View style={styles.itemRow}>
+                <Text>{1}x {service.category}</Text>
+                <Text>{formatPrice(selectedPrice)}</Text>
+            </View>
+            <View style={styles.itemRow}><Text>Travelling Cost</Text><Text>{formatPrice(travellingCost)}</Text></View>
+            <View style={styles.itemRow}><Text>Consultation Fee</Text><Text>{formatPrice(consultationFee)}</Text></View>
+            {/* <View style={styles.itemRow}><Text>Subtotal</Text><Text>{formatPrice(subtotal)}</Text></View> */}
+            <View style={styles.itemRow}><Text>Tinkerly Fee ({(commissionRate * 100)}%)</Text><Text>{formatPrice(commissionFee)}</Text></View>
+            <View style={styles.itemRow}><Text style={styles.totalText}>Grand Total</Text><Text style={styles.totalText}>{formatPrice(grandTotal)}</Text></View>
+        </View>
     );
 };
 
@@ -91,7 +89,7 @@ export default function ReviewOrder() {
     };
 
     return (
-        <ThemedView style={styles.container}>
+        <ScrollView style={styles.container}>
             <BackButton text="Review Order" noMargin={true}/>
             <ScrollView>
                 <ReceiptCard
@@ -112,7 +110,7 @@ export default function ReviewOrder() {
                 <ConfirmPaymentMethod />
 
                 <Pressable style={styles.confirmBookingButton} onPress={() => setModalVisible(true)}>
-                    <ThemedText style={styles.confirmBookingText}>Confirm Booking</ThemedText>
+                    <Text style={styles.confirmBookingText}>Confirm Booking</Text>
                 </Pressable>
             </ScrollView>
 
@@ -125,35 +123,35 @@ export default function ReviewOrder() {
             >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
-                        <ThemedText style={styles.modalTitle}>Confirm Booking</ThemedText>
-                        <ThemedText style={styles.modalText}>
+                        <Text style={styles.modalTitle}>Confirm Booking</Text>
+                        <Text style={styles.modalText}>
                             Are you sure you want to confirm this booking?
-                        </ThemedText>
+                        </Text>
 
                         <View style={styles.modalButtons}>
                             <Pressable style={styles.cancelButton} onPress={() => setModalVisible(false)}>
-                                <ThemedText style={styles.cancelButtonText}>Cancel</ThemedText>
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
                             </Pressable>
 
                             <Pressable style={styles.confirmButton} onPress={handleConfirmBooking}>
-                                <ThemedText style={styles.confirmButtonText}>Confirm</ThemedText>
+                                <Text style={styles.confirmButtonText}>Confirm</Text>
                             </Pressable>
                         </View>
                     </View>
                 </View>
             </Modal>
-        </ThemedView>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f5f5f5', marginTop: 40, marginHorizontal: 20 },
+    container: { flex: 1, backgroundColor: 'white', paddingTop: 40, paddingHorizontal: 20 },
     header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#ccc' },
     headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#41A48F' },
     backButton: { padding: 8 },
     placeholder: { width: 40 },
-    card: { backgroundColor: '#fff', borderRadius: 10, padding: 20, marginVertical: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
-    companyName: { fontSize: 18, fontWeight: 'bold', marginBottom: 20 },
+    card: { backgroundColor: '#fff', borderRadius: 10, padding: 20, marginVertical: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 5 },
+    companyName: { fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: 'black' },
     itemRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
     totalText: { fontWeight: 'bold', fontSize: 16 },
     confirmBookingButton: { backgroundColor: '#41A48F', margin: 20, padding: 16, borderRadius: 10, alignItems: 'center' },

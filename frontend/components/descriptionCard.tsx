@@ -1,20 +1,18 @@
-import { Platform, StyleSheet } from "react-native";
-import { ThemedText } from "./ThemedText";
-import { ThemedView } from "./ThemedView";
+import { Platform, StyleSheet, View, Text } from "react-native";
 
 
 export default function DescriptionCard ({ description }) {
     return (
-        <ThemedView style={styles.descriptionCard}>
-            <ThemedText style={styles.descriptionTitle}>Service Description</ThemedText>
-            <ThemedText style={styles.descriptionText}>
+        <View style={styles.descriptionCard}>
+            <Text style={styles.descriptionTitle}>Service Description</Text>
+            <Text style={styles.descriptionText}>
               {description 
                 ? description 
                 : "Customer's air-con is not cold. Requires cleaning and servicing. We performed suctioning and cleaning of the webbing to fix the issue."
               }
             
-            </ThemedText>
-        </ThemedView>
+            </Text>
+        </View>
     )
 }
 

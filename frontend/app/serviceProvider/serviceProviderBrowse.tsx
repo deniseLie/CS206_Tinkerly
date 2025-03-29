@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import ReviewOrder from '../review/reviewOrder';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LocationSearchBar, SearchBar } from '@/components/SearchBar';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import ButtonFilter from '@/components/ButtonFilter';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from '@/components/BackButton';
-import { fetchServiceProviderByServiceType, fetchServiceProviders } from '@/services/serviceProviderApi';
+import { fetchServiceProviderByServiceType } from '@/services/serviceProviderApi';
 
 export default function ServiceProviderBrowse() {
-
-  const router = useRouter();
 
   // Params
   const { data = null } = useLocalSearchParams();
   const parsedData = data ? JSON.parse(data) : null;
+  console.log("PARESEED", parsedData);
 
   // State
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -34,7 +31,7 @@ export default function ServiceProviderBrowse() {
     const loadServiceProvider = async () => {
       try {
         const data = await fetchServiceProviderByServiceType("AC%20Repair");
-        // console.log('Fetch service provider', data);
+        console.log('Fetch service provider', data);
         setServiceProviders(data);
       } catch (e) {
         console.error('Error fetching service provider', e);
@@ -54,14 +51,16 @@ export default function ServiceProviderBrowse() {
     });
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <BackButton text="Reselect Date/time" isHomeButton={true} noMargin={true}/>
       <LocationSearchBar />
       <Text style={styles.headerText}>{parsedData?.service?.category || "All Services"}</Text>
       {parsedData?.selectedDate && parsedData?.selectedTime && (
         <Text style={styles.selectedInfo}>Selected Date: {parsedData.selectedDate}, Time: {parsedData.selectedTime}</Text>
       )}
-      <Text style={styles.subHeadertext}>{serviceProviders.length} Service Providers</Text>
+      <Text style={styles.subHeadertext}>{serviceProviders.length} Service Provider(s)</Text>
+
+      {/* Search bar */}
       <View style={styles.searchFilterProviderContainer}>
         <FontAwesome size={30} name="filter" color={"gray"} />
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} searchPlaceholder="Search for Service Provider" />
@@ -69,6 +68,8 @@ export default function ServiceProviderBrowse() {
           <FontAwesome size={30} name="question-circle" color={"gray"} />
         </Pressable>
       </View>
+
+      {/* Filter tab */}
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false} 
@@ -85,29 +86,29 @@ export default function ServiceProviderBrowse() {
         ))}
       </ScrollView>
 
-        
+      {/* List of service providers */}
       {loading ? (
         <ActivityIndicator size="large" color="gray" />
       ) : (
-        <FlatList
-          data={filteredServices}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
+        <ScrollView 
+          contentContainerStyle={styles.servicesContainer} 
+          showsVerticalScrollIndicator={false}
+        >
+          {filteredServices.map((service, index) => (
             <Link
+              key={index}
               href={{
                 pathname: `/serviceProvider/serviceProviderPage`,
-                params: { data: JSON.stringify({ provider: item, ...parsedData }) },
+                params: { data: JSON.stringify({ provider: service, ...parsedData }) },
               }}
               style={{ textDecorationLine: 'none' }}
             >
-              <ServiceProviderCard service={item} />
+              <ServiceProviderCard service={service} />
             </Link>
-          )}
-          contentContainerStyle={styles.servicesContainer} 
-          showsVerticalScrollIndicator={false} // Hides scrollbar
-        />
+          ))}
+        </ScrollView>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -117,5 +118,5 @@ const styles = StyleSheet.create({
   subHeadertext: { fontSize: 18, marginTop: 10, fontWeight: 'bold' },
   searchFilterProviderContainer: { flexDirection: 'row', gap: 10, marginVertical: 10 },
   filterContainer: { flexGrow: 0, marginTop: 10, marginBottom: 10, height: 80 },
-  servicesContainer: { gap: 20 }
+  servicesContainer: { gap: 20, paddingBottom: 40 }
 });

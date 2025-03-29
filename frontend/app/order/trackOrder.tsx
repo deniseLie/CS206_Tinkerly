@@ -1,10 +1,7 @@
 
 import { useState } from 'react';
-import { StyleSheet, Platform, Pressable, View, Modal } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { StyleSheet, Platform, Pressable, View, Modal, Text, ScrollView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import OrderCard from '@/components/OrderCard';
 import BackButton from '@/components/BackButton';
 import DescriptionCard from '@/components/descriptionCard';
@@ -40,7 +37,7 @@ export default function trackOrder() {
   };
     
   return (
-    <ThemedView style={styles.container}>
+    <ScrollView style={styles.container}>
       
       <BackButton text="Track Order" noMargin={true}/>
 
@@ -71,7 +68,7 @@ export default function trackOrder() {
 
         {/* Complete Order Button */}
         <Pressable style={styles.completeOrderButton} onPress={handleCompleteOrder}>
-          <ThemedText style={styles.completeOrderText}>Complete Order</ThemedText>
+          <Text style={styles.completeOrderText}>Complete Order</Text>
         </Pressable>
 
         {/* Confirmation Modal */}
@@ -82,24 +79,23 @@ export default function trackOrder() {
           onRequestClose={cancelCompleteOrder}
         >
           <View style={styles.modalOverlay}>
-            <ThemedView style={styles.modalContent}>
-              <ThemedText style={styles.modalTitle}>Confirm Completion</ThemedText>
-              <ThemedText style={styles.modalMessage}>Are you sure you want to complete this order and leave a review?</ThemedText>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Confirm Completion</Text>
+              <Text style={styles.modalMessage}>Are you sure you want to complete this order and leave a review?</Text>
               
               <View style={styles.modalButtons}>
                 <Pressable style={[styles.modalButton, {backgroundColor: "#E74C3C"}]} onPress={cancelCompleteOrder}>
-                  <ThemedText style={styles.modalButtonText}>Cancel</ThemedText>
+                  <Text style={styles.modalButtonText}>Cancel</Text>
                 </Pressable>
                 <Pressable style={styles.modalButton} onPress={confirmCompleteOrder}>
-                  <ThemedText style={styles.modalButtonText}>Confirm</ThemedText>
+                  <Text style={styles.modalButtonText}>Confirm</Text>
                 </Pressable>
               </View>
-            </ThemedView>
+            </View>
           </View>
         </Modal>
-        
       </View> 
-    </ThemedView>
+    </ScrollView>
   );
 }
 
