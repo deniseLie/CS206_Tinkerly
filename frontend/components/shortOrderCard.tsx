@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Pressable, Image, View, Text } from "react-native
 import { router } from 'expo-router';
 
 export default function ShortOrderCard({ order }) {
-
+console.log(order)
   const trackOrderPressed = (service) => {
     router.push({
       pathname: "/order/trackOrder",
@@ -33,10 +33,12 @@ export default function ShortOrderCard({ order }) {
       <View>
         <Text style={styles.companyName}>{order?.service?.providerName} ({grandTotal || 50} SGD)</Text>
         <Text>{order.service?.providerCategory}</Text>
-        <Text>{order.service?.time}</Text>
+        <Text>{order.service?.description}</Text>
+        {/* <Text>{order.service?.time}</Text> */}
         
-        <Text style={styles.status}>Ongoing</Text>
-        
+        {order?.trackOrder && (
+          <Text style={styles.status}>Ongoing</Text>
+        )}
       </View>
     </Pressable>
   );

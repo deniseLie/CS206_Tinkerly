@@ -20,25 +20,23 @@ export default function ServiceProviderPage ({}) {
     const [isCalendarVisible, setCalendarVisible] = useState(false);
     const [reviews, setReviews] = useState([]);
 
-    console.log(parsedData?.service?.price);
-    
-    const price = parsedData?.provider?.price || 
-            (selectedTime && getPrice(parsedData, parseInt(selectedTime.slice(0, 2), 10)))|| 
-            parsedData?.service?.price;
+    const pricing = parsedData?.provider?.ServiceTypes[0]?.basePrice + parsedData?.provider?.ServiceTypes[0]?.consultPrice || 0;
+    const price = (selectedTime && getPrice(parseInt(selectedTime.slice(0, 2), 10), pricing))|| 
+            parsedData?.service?.price || 0;
 
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState(
         Array.from({ length: 24 * 2 }, (_, i) => {
             const hour = Math.floor(i / 2);
             const minute = i % 2 === 0 ? "00" : "30";
-            const time = `${hour % 12 === 0 ? 12 : hour % 12}:${minute} ${hour < 12 ? "AM" : "PM"}`;
+            const time = `${hour.toString().padStart(2, "0")}${minute}`; // 24-hour format
     
-            // Exclude 12 AM - 6 AM and 2 PM - 4 PM
+            // Exclude 0000 - 0600 and 1400 - 1600
             if ((hour >= 0 && hour < 6) || (hour >= 14 && hour < 16)) {
                 return null; // Filter out these times
             }
-            
-            let price = getPrice(parsedData, hour);
+    
+            let price = getPrice(hour, pricing);
     
             return { label: `${time} - $${price}`, value: time };
         }).filter(Boolean) // Remove null values
@@ -50,7 +48,8 @@ export default function ServiceProviderPage ({}) {
 
     const fetchReviewProvider = async() => {
         try {
-            const data = await fetchServiceReviewByServiceProviderId(parsedData?.spID);
+            console.log(parsedData)
+            const data = await fetchServiceReviewByServiceProviderId(parsedData?.provider?.spID);
             console.log('check dataa', data);
             setReviews(data);
         } catch (e) {
@@ -90,7 +89,7 @@ export default function ServiceProviderPage ({}) {
                 params: {
                 data: JSON.stringify({
                     selectedTime: selectedTime,
-                    selectedPrice: 40,
+                    selectedPrice: price,
                     ...parsedData,
                 })
                 }
@@ -113,8 +112,9 @@ export default function ServiceProviderPage ({}) {
                     <Text style={styles.location}>{parsedData?.provider?.distance || parsedData?.distance} km</Text>
                 </View>
                 <Text style={styles.price}>
-                    {selectedTime ? 'Price' : "Ranging"} : {price} 
-                    {selectedTime && " SGD"}
+                    {selectedTime ? "Price" : "Ranging"}
+                    {" : "}
+                    {selectedTime ? price : `${pricing} - ${pricing + 30}`} SGD
                 </Text>
             </View>
 
@@ -210,8 +210,7 @@ export default function ServiceProviderPage ({}) {
     );
 }
 
-const getPrice = (parsedData, hour) => {
-    let minPrice = parsedData?.minPrice || 45;
+const getPrice = (hour, minPrice) => {
     let price = minPrice; // Default price
 
     // Adjust price based on time

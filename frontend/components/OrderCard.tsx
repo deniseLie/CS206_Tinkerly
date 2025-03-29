@@ -27,13 +27,15 @@ const OrderCard = ({ order }: { order: OrderProps }) => {
   const tinkerlyFee = subtotal * 0.05;
   const grandTotal = subtotal + tinkerlyFee;
 
+  console.log("ORDER ", order);
+
   return (
     <View style={styles.card}>
-      <Text style={styles.companyName}>{order.companyName}</Text>
+      <Text style={styles.companyName}>{order?.service?.providerName}</Text>
 
       <View style={styles.row}>
-        <Text>{order.service.name} ({order.service.startTime}-{order.service.endTime})</Text>
-        <Text>S${order?.service?.finalPrice || order?.finalPrice}</Text>
+        <Text>{order.service.providerCategory} ({order.service.time})</Text>
+        <Text>S${order?.service?.finalPrice - 10 || order?.finalPrice}</Text>
       </View>
 
       <View style={styles.row}>

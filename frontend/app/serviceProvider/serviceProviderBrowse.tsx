@@ -13,7 +13,7 @@ export default function ServiceProviderBrowse() {
   // Params
   const { data = null } = useLocalSearchParams();
   const parsedData = data ? JSON.parse(data) : null;
-  console.log("PARESEED", parsedData);
+  // console.log("PARESEED", parsedData);
 
   // State
   const [searchQuery, setSearchQuery] = useState<string>("");

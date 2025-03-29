@@ -54,7 +54,7 @@ export default function trackOrder() {
             travellingCost: 5.00, // Hardcoded
             consultationFee: 5.00, // Hardcoded
             endTime: 'N/A', // Hardcoded
-            trackOrder: false
+            trackOrder: true
           }}
         />
         

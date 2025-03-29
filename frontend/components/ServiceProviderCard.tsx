@@ -4,6 +4,8 @@ import { FontAwesome } from "@expo/vector-icons";
 
 export default function ServiceProviderCard({ service, serviceOnPress }) {
 
+  const pricing = service?.ServiceTypes[0]?.basePrice + service?.ServiceTypes[0]?.consultPrice;
+
   return (
     <View style={styles.cardContainer}>
       <Image source={require('frontend/assets/images/ahbeng.png')} style={styles.profileImage} />
@@ -27,7 +29,7 @@ export default function ServiceProviderCard({ service, serviceOnPress }) {
         <View style={styles.priceContainer}>
           <Text>Starting From</Text>
           <Pressable style={styles.priceButton} onPress={serviceOnPress}>
-              <Text style={styles.priceText}>{service?.price || 40} SGD</Text>
+              <Text style={styles.priceText}>{pricing || 40} SGD</Text>
           </Pressable>
         </View>
     </View>

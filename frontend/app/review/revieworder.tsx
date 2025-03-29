@@ -14,6 +14,7 @@ import DescriptionCard from '@/components/descriptionCard';
 import ConfirmPaymentMethod from '@/components/confirmPaymentMethod';
 import ExtraReqInput from '@/components/ExtraReqInput';
 import { createService } from '@/services/serviceApi';
+import OrderCard from '@/components/OrderCard';
 
 type ServiceItem = {
     serviceName: string;
@@ -69,7 +70,7 @@ export default function ReviewOrder() {
     const orderData = {
         extraRequirement: extraRequests,
         description: parsedData?.description,
-        finalPrice: parsedData?.service?.price,
+        finalPrice: (parsedData?.selectedPrice + 10),
         date: parsedData?.selectedDate,
         time: parsedData?.selectedTime,
         customerID: 1,
@@ -92,6 +93,7 @@ export default function ReviewOrder() {
         <ScrollView style={styles.container}>
             <BackButton text="Review Order" noMargin={true}/>
             <ScrollView>
+               
                 <ReceiptCard
                     companyName={parsedData?.provider?.name}
                     service={parsedData?.service}
