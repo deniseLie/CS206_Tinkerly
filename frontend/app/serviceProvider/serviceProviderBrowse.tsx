@@ -117,6 +117,6 @@ const styles = StyleSheet.create({
   headerText: { fontSize: 20, fontWeight: '500' },
   subHeadertext: { fontSize: 18, marginTop: 10, fontWeight: 'bold' },
   searchFilterProviderContainer: { flexDirection: 'row', gap: 10, marginVertical: 10 },
-  filterContainer: { flexGrow: 0, marginTop: 10, marginBottom: 10, height: 80 },
+  filterContainer: { flex: 0, marginTop: 10, marginBottom: 10},
   servicesContainer: { gap: 20, paddingBottom: 40 }
 });

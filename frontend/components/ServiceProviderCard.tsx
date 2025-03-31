@@ -2,9 +2,14 @@ import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-export default function ServiceProviderCard({ service, serviceOnPress }) {
+export default function ServiceProviderCard ({ service }) {
 
-  const pricing = service?.ServiceTypes[0]?.basePrice + service?.ServiceTypes[0]?.consultPrice;
+  if (!service) {
+    console.warn("Service is undefined or null.");
+    return null; // Avoid rendering if service data is missing
+  }
+
+  const pricing = (service?.ServiceTypes?.[0]?.basePrice || 0) + (service?.ServiceTypes?.[0]?.consultPrice || 0);
 
   return (
     <View style={styles.cardContainer}>
@@ -15,21 +20,21 @@ export default function ServiceProviderCard({ service, serviceOnPress }) {
             <Text style={styles.servicesText}>{service.category}</Text>
             <View style={styles.locationContainer}>
             <FontAwesome name="map-marker" size={14} color="gray" />
-            <Text style={styles.distanceText}>{service.distance} km</Text>
+            <Text style={styles.distanceText}>{service?.distance || 0} km</Text>
             </View>
         </View>
 
         {/* Ratings */}
         <View style={styles.ratingContainer}>
-            <Text style={styles.ratingText}>{service.rating.toFixed(2)}</Text>
+            <Text style={styles.ratingText}>{service?.rating?.toFixed(2) ?? "N/A"}</Text>
             <FontAwesome name="star" size={14} color="#F4A100" />
         </View>
 
         {/* Price */}
         <View style={styles.priceContainer}>
           <Text>Starting From</Text>
-          <Pressable style={styles.priceButton} onPress={serviceOnPress}>
-              <Text style={styles.priceText}>{pricing || 40} SGD</Text>
+          <Pressable style={styles.priceButton}>
+              <Text style={styles.priceText}>{pricing == 0 ? 40 : pricing} SGD</Text>
           </Pressable>
         </View>
     </View>

@@ -33,7 +33,7 @@ export default function Browse() {
   const loadServiceProvider = async () => {
     try {
       const data = await fetchServiceProviders();
-      // console.log('Fetch service provider', data);
+      console.log('Fetch service provider', data);
       setServiceProvider(data);
     } catch (e) {
       console.error('Error fetching service provider', e);
