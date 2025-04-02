@@ -7,6 +7,7 @@ import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from '@/components/BackButton';
 import { fetchServiceProviderByServiceType } from '@/services/serviceProviderApi';
+import FilterPopup from '@/components/FilterPopup';
 
 export default function ServiceProviderBrowse() {
 
@@ -22,6 +23,9 @@ export default function ServiceProviderBrowse() {
   const [loading, setLoading] = useState(true);
   const filterOptions = ["Recommended", "Nearby", "Highest Rated"];
 
+  const [isFilterPopupVisible, setFilterPopupVisible] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState(null);
+
   // use effect
     useEffect(() => {
       loadServiceProvider();
@@ -31,7 +35,7 @@ export default function ServiceProviderBrowse() {
     const loadServiceProvider = async () => {
       try {
         const data = await fetchServiceProviderByServiceType("AC%20Repair");
-        console.log('Fetch service provider', data);
+        console.log('Fetch service provider', JSON.stringify(data));
         setServiceProviders(data);
       } catch (e) {
         console.error('Error fetching service provider', e);
@@ -39,10 +43,32 @@ export default function ServiceProviderBrowse() {
         setLoading(false);
       }
     }
+
+    const applyFilters = (filterData) => {
+      // console.log("Applied Filters:", filterData);
+      setAppliedFilters(filterData);
+      // const { minPrice, maxPrice, minRatings, maxRatings, minBookings, maxBookings, joiningDate, sortOrder } = filterData;
+      setFilterPopupVisible(false);
+    };
+
+    const clearFilters = () => {
+      setAppliedFilters(null);
+    }
     
   // Filter service providers
   const filteredServices = serviceProviders
-    .filter(service => service.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter(service => 
+        service.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(service => {
+      if (!appliedFilters) return true;
+      const { minPrice, maxPrice, minRatings, maxRatings, minBookings, maxBookings } = appliedFilters;
+      const final_price = service?.ServiceTypes[0]?.basePrice + service?.ServiceTypes[0]?.consultPrice
+      return (
+        final_price >= minPrice && final_price <= maxPrice &&
+        service.rating >= minRatings && service.rating <= maxRatings
+      );
+    })
     .sort((a, b) => {
       if (activeFilter === "Recommended") return b.rating - a.rating;
       if (activeFilter === "Nearby") return a.distance - b.distance;
@@ -62,7 +88,9 @@ export default function ServiceProviderBrowse() {
 
       {/* Search bar */}
       <View style={styles.searchFilterProviderContainer}>
-        <FontAwesome size={30} name="filter" color={"gray"} />
+        <Pressable onPress={() => setFilterPopupVisible(true)}>
+          <FontAwesome size={30} name="filter" color={"gray"} />
+        </Pressable>
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} searchPlaceholder="Search for Service Provider" />
         <Pressable>
           <FontAwesome size={30} name="question-circle" color={"gray"} />
@@ -86,6 +114,16 @@ export default function ServiceProviderBrowse() {
         ))}
       </ScrollView>
 
+      {/* Applied filters */}
+      {appliedFilters && (
+        <View style={styles.appliedFiltersContainer}>
+          <Text style={styles.appliedFiltersText}>Filters Applied</Text>
+          <Pressable onPress={clearFilters} style={styles.clearButton}>
+            <Text style={styles.clearButtonText}>Clear</Text>
+          </Pressable>
+        </View>
+      )}
+
       {/* List of service providers */}
       {loading ? (
         <ActivityIndicator size="large" color="gray" />
@@ -108,6 +146,12 @@ export default function ServiceProviderBrowse() {
           ))}
         </ScrollView>
       )}
+
+      <FilterPopup
+          isVisible={isFilterPopupVisible}
+          onClose={() => setFilterPopupVisible(false)}
+          onApply={applyFilters} 
+      />
     </ScrollView>
   );
 }

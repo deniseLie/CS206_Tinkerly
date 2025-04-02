@@ -72,7 +72,7 @@ export default function ReviewOrder() {
         date: parsedData?.selectedDate,
         time: parsedData?.selectedTime,
         customerID: 1,
-        typeID: parsedData?.service?.id,
+        typeID: parsedData?.service?.ServiceType?.[0],
     };
 
     const handleConfirmBooking = async () => {
