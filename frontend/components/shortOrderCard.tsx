@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Pressable, Image, View, Text } from "react-native
 import { router } from 'expo-router';
 
 export default function ShortOrderCard({ order }) {
-console.log(order)
+
   const trackOrderPressed = (service) => {
     router.push({
       pathname: "/order/trackOrder",
@@ -21,7 +21,7 @@ console.log(order)
   }
 
   const subtotal = order?.service?.finalPrice || order?.finalPrice + order.travellingCost + order.consultationFee;
-  const tinkerlyFee = subtotal * 0.05;
+  const tinkerlyFee = subtotal * 0.07;
   const grandTotal = subtotal + tinkerlyFee;
 
   return (

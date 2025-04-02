@@ -23,11 +23,13 @@ type OrderProps = {
 
 
 const OrderCard = ({ order }: { order: OrderProps }) => {
-  const subtotal = order?.service?.finalPrice || order?.finalPrice + order.travellingCost + order.consultationFee;
-  const tinkerlyFee = subtotal * 0.05;
+  const finalPrice = order?.service?.finalPrice || 40;
+  const subtotal = finalPrice
+  
+  const tinkerlyFee = (finalPrice - 10) * 0.07;
   const grandTotal = subtotal + tinkerlyFee;
 
-  console.log("ORDER ", order);
+  // console.log("ORDER ", order);
 
   return (
     <View style={styles.card}>
@@ -35,7 +37,7 @@ const OrderCard = ({ order }: { order: OrderProps }) => {
 
       <View style={styles.row}>
         <Text>{order.service.providerCategory} ({order.service.time})</Text>
-        <Text>S${order?.service?.finalPrice - 10 || order?.finalPrice}</Text>
+        <Text>S${finalPrice - 10}</Text>
       </View>
 
       <View style={styles.row}>
@@ -56,7 +58,7 @@ const OrderCard = ({ order }: { order: OrderProps }) => {
       </View>
 
       <View style={styles.row}>
-        <Text>Tinkerly Fee (5%)</Text>
+        <Text>Tinkerly Fee (7%)</Text>
         <Text>S${tinkerlyFee}</Text>
       </View>
 

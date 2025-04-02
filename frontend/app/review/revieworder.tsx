@@ -14,7 +14,6 @@ import DescriptionCard from '@/components/descriptionCard';
 import ConfirmPaymentMethod from '@/components/confirmPaymentMethod';
 import ExtraReqInput from '@/components/ExtraReqInput';
 import { createService } from '@/services/serviceApi';
-import OrderCard from '@/components/OrderCard';
 
 type ServiceItem = {
     serviceName: string;
@@ -36,10 +35,9 @@ const ReceiptCard = ({
     selectedPrice,
     travellingCost,
     consultationFee,
-    commissionRate = 0.05,
 }: ReceiptCardProps) => {
     const subtotal = selectedPrice;
-    const commissionFee = subtotal * commissionRate;
+    const commissionFee = subtotal * 0.07;
     const grandTotal = subtotal + commissionFee + travellingCost + consultationFee;
 
     const formatPrice = (price: number): string => `S$${price}`;
@@ -54,7 +52,7 @@ const ReceiptCard = ({
             <View style={styles.itemRow}><Text>Travelling Cost</Text><Text>{formatPrice(travellingCost)}</Text></View>
             <View style={styles.itemRow}><Text>Consultation Fee</Text><Text>{formatPrice(consultationFee)}</Text></View>
             {/* <View style={styles.itemRow}><Text>Subtotal</Text><Text>{formatPrice(subtotal)}</Text></View> */}
-            <View style={styles.itemRow}><Text>Tinkerly Fee ({(commissionRate * 100)}%)</Text><Text>{formatPrice(commissionFee)}</Text></View>
+            <View style={styles.itemRow}><Text>Tinkerly Fee (7%)</Text><Text>{formatPrice(commissionFee)}</Text></View>
             <View style={styles.itemRow}><Text style={styles.totalText}>Grand Total</Text><Text style={styles.totalText}>{formatPrice(grandTotal)}</Text></View>
         </View>
     );

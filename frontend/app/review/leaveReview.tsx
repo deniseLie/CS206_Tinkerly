@@ -20,7 +20,7 @@ export default function ReviewPage() {
     const [loading, setLoading] = useState<boolean>(false); // for loading state
 
     const subtotal = parsedService?.service?.finalPrice || parsedService?.finalPrice + 5 + 5;
-    const tinkerlyFee = subtotal * 0.05;
+    const tinkerlyFee = subtotal * 0.07;
     const grandTotal = subtotal + tinkerlyFee;
 
     // Handle Rating

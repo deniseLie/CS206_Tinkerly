@@ -14,7 +14,7 @@ export default function Order() {
       try {
         const data = await fetchServices();
         setServices(data);
-        // console.log(data);
+        console.log("DATAaA", data);
       } catch (error) {
         console.error('Error fetching services:', error);
       } finally {
