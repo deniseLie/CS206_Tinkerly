@@ -1,5 +1,6 @@
 // controllers/serviceProviderController.js
 const { ServiceProvider, ServiceType } = require('../models');
+const Sequelize = require('sequelize');
 
 exports.getProvidersByServiceType = async (req, res) => {
   try {
@@ -8,8 +9,8 @@ exports.getProvidersByServiceType = async (req, res) => {
     const providers = await ServiceProvider.findAll({
       include: {
         model: ServiceType,
-        where: { type },
-        attributes: ['basePrice', 'consultPrice'], // Exclude service type details from the response
+        where: { type  },
+        attributes: ['typeID', 'basePrice', 'consultPrice'], // Exclude service type details from the response
       },
     });
 

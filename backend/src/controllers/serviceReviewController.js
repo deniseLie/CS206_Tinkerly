@@ -8,8 +8,10 @@ exports.getReviewsByServiceProvider = async (req, res) => {
     const reviews = await ServiceReview.findAll({
       include: {
         model: Service,
+        required: true, // Ensure we only get reviews with an associated Service
         include: {
           model: ServiceType,
+          required: true, // Only include the Service if its ServiceType matches the spID
           where: { spID },
           attributes: [], // Exclude service type details from the response
         },
@@ -22,6 +24,7 @@ exports.getReviewsByServiceProvider = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Create a new service review
 exports.createServiceReview = async (req, res) => {
