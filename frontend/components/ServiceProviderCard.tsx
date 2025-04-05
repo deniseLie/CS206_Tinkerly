@@ -34,7 +34,7 @@ export default function ServiceProviderCard ({ service }) {
         <View style={styles.priceContainer}>
           <Text>Starting From</Text>
           <Pressable style={styles.priceButton}>
-              <Text style={styles.priceText}>{pricing == 0 ? 40 : pricing} SGD</Text>
+              <Text style={styles.priceText}>${pricing == 0 ? 40 : pricing}</Text>
           </Pressable>
         </View>
     </View>

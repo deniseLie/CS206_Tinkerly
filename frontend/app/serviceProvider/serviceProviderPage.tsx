@@ -114,7 +114,7 @@ export default function ServiceProviderPage ({}) {
                 <Text style={styles.price}>
                     {selectedTime ? "Price" : "Ranging"}
                     {" : "}
-                    {selectedTime ? price : `${pricing} - ${pricing + 30}`} SGD
+                    {selectedTime ? price : `$${pricing} - $${pricing + 30}`}
                 </Text>
             </View>
 

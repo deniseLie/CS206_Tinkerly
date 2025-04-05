@@ -101,7 +101,7 @@ export default function ReviewPage() {
                     <Text style={styles.service}>{parsedService?.service?.date} {parsedService?.service?.time}</Text>
                     <Text style={styles.description}>{parsedService?.service?.description}</Text>
                     <Text style={styles.description}>{parsedService?.service?.extraRequirement}</Text>
-                    <Text style={styles.price}>Price: {grandTotal} SGD</Text>
+                    <Text style={styles.price}>Price: ${grandTotal}</Text>
                 </View>
             </View>
 

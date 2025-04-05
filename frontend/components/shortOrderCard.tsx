@@ -31,7 +31,7 @@ export default function ShortOrderCard({ order }) {
     >
       <Image source={require('frontend/assets/images/ahbeng.png')} style={styles.profileImage} />
       <View>
-        <Text style={styles.companyName}>{order?.service?.providerName} ({grandTotal || 50} SGD)</Text>
+        <Text style={styles.companyName}>{order?.service?.providerName} (${grandTotal || 50})</Text>
         <Text>{order.service?.providerCategory}</Text>
         <Text>{order.service?.description}</Text>
         {/* <Text>{order.service?.time}</Text> */}
