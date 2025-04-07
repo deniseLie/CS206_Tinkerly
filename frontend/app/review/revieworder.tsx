@@ -40,7 +40,7 @@ const ReceiptCard = ({
     const commissionFee = subtotal * 0.07;
     const grandTotal = subtotal + commissionFee + travellingCost + consultationFee;
 
-    const formatPrice = (price: number): string => `S$${price}`;
+    const formatPrice = (price: number): string => `S$${price.toFixed(2)}`;
 
     return (
         <View style={styles.card}>
@@ -72,7 +72,7 @@ export default function ReviewOrder() {
         date: parsedData?.selectedDate,
         time: parsedData?.selectedTime,
         customerID: 1,
-        typeID: parsedData?.provider?.ServiceType?.[0],
+        typeID: parseInt(parsedData?.provider?.ServiceTypes?.[0]?.typeID),
     };
 
     const handleConfirmBooking = async () => {
@@ -83,7 +83,7 @@ export default function ReviewOrder() {
             setModalVisible(false);
             router.push('/(tabs)/order');
         } catch (error) {
-            console.error('Error confirming booking:', error);
+            console.error('Error confirming booking:', error?.response?.data);
         }
     };
 

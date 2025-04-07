@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Pressable, Image, View, Text } from "react-native
 import { router } from 'expo-router';
 
 export default function ShortOrderCard({ order }) {
+  console.log(order)
 
   const trackOrderPressed = (service) => {
     router.push({

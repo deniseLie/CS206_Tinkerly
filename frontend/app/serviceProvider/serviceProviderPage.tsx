@@ -50,7 +50,7 @@ export default function ServiceProviderPage ({}) {
         try {
             console.log(parsedData)
             const data = await fetchServiceReviewByServiceProviderId(parsedData?.provider?.spID);
-            console.log('check dataa', data);
+            // console.log('check dataa', data);
             setReviews(data);
         } catch (e) {
             console.log("error fetch review service provider", e?.response?.data);
